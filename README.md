@@ -130,20 +130,27 @@ sequenceDiagram
 
 ## 8. Screenshots
 
-Suggested screenshot list is maintained in [docs/screenshots/README.md](docs/screenshots/README.md).
+Real screenshots are stored in [docs/screenshots](docs/screenshots). The Docker Compose terminal screenshot is still pending, but the frontend and Swagger screenshots below were captured from the running stack.
 
-Screenshots are not committed yet. Recommended captures:
+![Dashboard](docs/screenshots/01_dashboard.png)
 
-- Dashboard
-- Analyze form
-- AgentResult
-- Inquiry list
-- Inquiry detail
-- Retrieved knowledge
-- Agent trace
-- Review form
-- Swagger
-- Docker Compose running
+![Analyze Form](docs/screenshots/02_analyze_form.png)
+
+![Agent Result](docs/screenshots/03_agent_result.png)
+
+![Inquiry Detail](docs/screenshots/05_inquiry_detail.png)
+
+![Candidate Products](docs/screenshots/06_candidate_products.png)
+
+![Retrieved Knowledge](docs/screenshots/07_retrieved_knowledge.png)
+
+![Agent Trace](docs/screenshots/08_agent_trace.png)
+
+![Review Form](docs/screenshots/09_review_form.png)
+
+![Swagger API](docs/screenshots/10_swagger_api.png)
+
+The full screenshot checklist and pending status are maintained in [docs/screenshots/README.md](docs/screenshots/README.md).
 
 ## 9. Quick Start with Docker Compose
 
@@ -269,7 +276,7 @@ Important boundaries:
 
 Recommended next steps:
 
-- Add real screenshots and a short demo video.
+- Record a short 3-5 minute demo video using the captured screenshot flow.
 - Add Alembic migrations for production database management.
 - Replace lightweight keyword RAG with Qdrant.
 - Add Redis for async jobs and workflow queues.

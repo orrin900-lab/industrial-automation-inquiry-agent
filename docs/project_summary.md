@@ -18,6 +18,7 @@ Industrial Automation Inquiry Agent is a full-stack AI Agent prototype for B2B e
 - Retrieved Knowledge Sources.
 - Human review form and review logs.
 - Docker Compose one-command startup.
+- Real screenshots for dashboard, analyze form, AgentResult, inquiry list/detail, candidate products, RAG sources, Agent Trace, review form, and Swagger.
 
 ## Current Tech Stack
 
@@ -51,8 +52,12 @@ The project has moved beyond a simple demo:
 - Repository and retriever interfaces exist.
 - Database persistence is implemented.
 - Docker Compose can run the whole stack.
+- Docker Compose has passed actual runtime validation with PostgreSQL, backend, and frontend services healthy.
 - Frontend displays structured sections rather than raw JSON only.
 - Agent Trace improves observability.
+- README and docs now include portfolio-oriented architecture, API overview, demo script, resume description, interview guide, and real screenshots.
+
+The project is currently suitable for GitHub, resume, interview, and short recording demonstrations.
 
 ## Current Limits
 
@@ -66,11 +71,13 @@ The project has moved beyond a simple demo:
 
 ## Future Roadmap
 
-- Add real screenshots and demo video.
+- Record a short 3-5 minute demo video.
 - Add Alembic migrations.
 - Replace lightweight RAG with Qdrant.
 - Add Redis for async jobs.
 - Add authentication and permissions.
+- Add knowledge base management UI.
+- Enhance email inquiry import.
 - Add CRM/ERP/email integrations with approval gates.
 - Add production observability and audit logs.
 - Expand tests with more real-world inquiry cases.
