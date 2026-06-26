@@ -14,7 +14,7 @@ This directory contains real screenshots captured from the running Docker Compos
 | `08_agent_trace.png` | captured | Agent Execution Trace with node mode, success status, latency, and output summary. |
 | `09_review_form.png` | captured | English reply draft, human review form, review status, reviewer note, and Review Logs area. |
 | `10_swagger_api.png` | captured | FastAPI Swagger documentation with the main inquiry APIs. |
-| `11_docker_compose_running.png` | pending | Docker Desktop or terminal output showing postgres, backend, and frontend containers as healthy. |
+| `11_docker_compose_running.png` | captured | Docker Desktop or terminal output showing postgres, backend, and frontend containers as healthy. |
 
 The Docker status screenshot is still pending because the automated browser tool could not capture a terminal/data-rendered page under its security policy. The underlying `docker-compose ps` verification was performed against the real running stack.
 
