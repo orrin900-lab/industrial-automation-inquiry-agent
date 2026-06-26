@@ -69,6 +69,8 @@ Docker Compose uses PostgreSQL by default:
 DATABASE_URL=postgresql+psycopg2://postgres:postgres@postgres:5432/industrial_agent
 ```
 
+The current Compose file uses `postgres:15-alpine`, which is compatible with this prototype and avoids unnecessary image drift.
+
 ## Manual Backend
 
 Manual startup is still available and keeps the SQLite fallback unless `DATABASE_URL` is set:

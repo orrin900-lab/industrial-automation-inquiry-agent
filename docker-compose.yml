@@ -1,9 +1,9 @@
 services:
   postgres:
-    image: postgres:16
+    image: postgres:15-alpine
     container_name: industrial-agent-postgres
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432"
     environment:
       POSTGRES_DB: industrial_agent
       POSTGRES_USER: postgres
@@ -23,7 +23,7 @@ services:
       postgres:
         condition: service_healthy
     ports:
-      - "8000:8000"
+      - "127.0.0.1:8000:8000"
     environment:
       DATABASE_URL: postgresql+psycopg2://postgres:postgres@postgres:5432/industrial_agent
       ENABLE_LLM_EXTRACTION: "false"
@@ -51,7 +51,7 @@ services:
       backend:
         condition: service_healthy
     ports:
-      - "3001:3000"
+      - "127.0.0.1:3001:3000"
     environment:
       NEXT_PUBLIC_API_BASE_URL: http://127.0.0.1:8000
     healthcheck:
