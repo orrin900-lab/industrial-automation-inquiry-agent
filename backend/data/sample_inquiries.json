@@ -1,0 +1,114 @@
+[
+  {
+    "id": "inq_plc_001",
+    "channel": "website",
+    "subject": "PLC module inquiry",
+    "message": "We need a Siemens compatible PLC for a packaging machine. Required 16DI and 8DO, 24V DC, RS485 communication. Please recommend a suitable model.",
+    "expected_category": "PLC"
+  },
+  {
+    "id": "inq_plc_002",
+    "channel": "email",
+    "subject": "Need PLC for conveyor",
+    "message": "Hello, we are looking for a PLC for conveyor control. Around 32 digital inputs and 32 outputs, Ethernet preferred. Quantity may be 5 pcs.",
+    "expected_category": "PLC"
+  },
+  {
+    "id": "inq_plc_003",
+    "channel": "website",
+    "subject": "PLC expansion module",
+    "message": "Do you have a digital input expansion module for X200 series? We need 16DI for sensor signals.",
+    "expected_category": "PLC"
+  },
+  {
+    "id": "inq_plc_004",
+    "channel": "email",
+    "subject": "Mitsubishi replacement",
+    "message": "Can you offer a cost-effective alternative to Mitsubishi FX series PLC for a small machine? Need RS485 and Modbus RTU.",
+    "expected_category": "PLC"
+  },
+  {
+    "id": "inq_vfd_001",
+    "channel": "website",
+    "subject": "VFD for pump",
+    "message": "We need 2.2kW VFD for water pump, 380V three phase, Modbus RTU required. Please suggest model.",
+    "expected_category": "VFD"
+  },
+  {
+    "id": "inq_vfd_002",
+    "channel": "email",
+    "subject": "Inverter inquiry",
+    "message": "Do you have 7.5kW inverter for fan application? Input voltage is 380V. Quantity 3 pcs.",
+    "expected_category": "VFD"
+  },
+  {
+    "id": "inq_vfd_003",
+    "channel": "website",
+    "subject": "220V VFD",
+    "message": "Looking for 1.5kW single phase 220V VFD for small conveyor machine. Need RS485.",
+    "expected_category": "VFD"
+  },
+  {
+    "id": "inq_vfd_004",
+    "channel": "email",
+    "subject": "VFD selection",
+    "message": "Please help select a drive for motor speed control. Motor power is not confirmed yet, application is conveyor.",
+    "expected_category": "VFD"
+  },
+  {
+    "id": "inq_hmi_001",
+    "channel": "website",
+    "subject": "7 inch HMI",
+    "message": "We need a 7 inch HMI with Ethernet and Modbus TCP for packaging line. It should communicate with PLC.",
+    "expected_category": "HMI"
+  },
+  {
+    "id": "inq_hmi_002",
+    "channel": "email",
+    "subject": "HMI panel",
+    "message": "Do you have 10.1 inch HMI, 1024x600 or better, with RS485 and Ethernet? Quantity 2 pcs.",
+    "expected_category": "HMI"
+  },
+  {
+    "id": "inq_hmi_003",
+    "channel": "website",
+    "subject": "Small HMI",
+    "message": "Looking for 4.3 inch HMI for pump controller. RS485 Modbus RTU is enough.",
+    "expected_category": "HMI"
+  },
+  {
+    "id": "inq_hmi_004",
+    "channel": "email",
+    "subject": "HMI compatibility",
+    "message": "We want HMI compatible with Modbus TCP PLC. Screen size not decided, maybe 7 or 10 inch.",
+    "expected_category": "HMI"
+  },
+  {
+    "id": "inq_sw_001",
+    "channel": "website",
+    "subject": "Industrial switch",
+    "message": "We need 8-port gigabit industrial switch for PLC network, unmanaged is ok. Wide temperature preferred.",
+    "expected_category": "Industrial Switch"
+  },
+  {
+    "id": "inq_sw_002",
+    "channel": "email",
+    "subject": "Managed switch with fiber",
+    "message": "Looking for managed industrial switch with 8 RJ45 ports and 2 fiber ports, gigabit speed.",
+    "expected_category": "Industrial Switch"
+  },
+  {
+    "id": "inq_sw_003",
+    "channel": "website",
+    "subject": "PoE industrial switch",
+    "message": "Do you have 8-port PoE industrial switch for machine vision cameras? Managed type preferred.",
+    "expected_category": "Industrial Switch"
+  },
+  {
+    "id": "inq_sw_004",
+    "channel": "email",
+    "subject": "Factory network switch",
+    "message": "We need 16-port unmanaged industrial switch for cabinet PLC communication, 24V DC power input.",
+    "expected_category": "Industrial Switch"
+  }
+]
