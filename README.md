@@ -21,6 +21,7 @@ Related docs:
 - [Interview Guide](docs/interview_guide.md)
 - [Resume Description](docs/resume_description.md)
 - [Project Summary](docs/project_summary.md)
+- [Manual Test Report](docs/manual_test_report.md)
 
 ## 2. Business Scenario
 
