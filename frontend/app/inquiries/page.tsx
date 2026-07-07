@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { getInquiries } from "@/lib/api";
 import type { InquiryListItem } from "@/lib/types";
 import { InquiryListTable } from "@/components/InquiryListTable";
+import { useI18n } from "@/lib/i18n";
 
 export default function InquiriesPage() {
   const [items, setItems] = useState<InquiryListItem[]>([]);
@@ -11,6 +12,7 @@ export default function InquiriesPage() {
   const [channel, setChannel] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const { t } = useI18n();
 
   useEffect(() => {
     let mounted = true;
@@ -47,20 +49,20 @@ export default function InquiriesPage() {
   return (
     <div className="space-y-6">
       <section>
-        <h1 className="text-2xl font-semibold text-ink">Inquiry List</h1>
-        <p className="mt-2 text-sm text-slate-600">Review analyzed inquiries and open each record for follow-up.</p>
+        <h1 className="text-2xl font-semibold text-ink">{t("inquiries.title")}</h1>
+        <p className="mt-2 text-sm text-slate-600">{t("inquiries.description")}</p>
       </section>
 
       <section className="rounded-lg border border-line bg-white p-5 shadow-subtle">
         <div className="grid gap-4 md:grid-cols-3">
           <label className="space-y-1">
-            <span className="text-sm font-medium text-slate-700">Status</span>
+            <span className="text-sm font-medium text-slate-700">{t("inquiries.status")}</span>
             <select
               value={status}
               onChange={(event) => setStatus(event.target.value)}
               className="focus-ring w-full rounded-md border border-line bg-white px-3 py-2 text-sm"
             >
-              <option value="">All statuses</option>
+              <option value="">{t("inquiries.allStatuses")}</option>
               <option value="pending_analysis">pending_analysis</option>
               <option value="analyzed">analyzed</option>
               <option value="pending_review">pending_review</option>
@@ -72,20 +74,20 @@ export default function InquiriesPage() {
           </label>
 
           <label className="space-y-1">
-            <span className="text-sm font-medium text-slate-700">Channel</span>
+            <span className="text-sm font-medium text-slate-700">{t("inquiries.channel")}</span>
             <select
               value={channel}
               onChange={(event) => setChannel(event.target.value)}
               className="focus-ring w-full rounded-md border border-line bg-white px-3 py-2 text-sm"
             >
-              <option value="">All channels</option>
+              <option value="">{t("inquiries.allChannels")}</option>
               <option value="website">website</option>
               <option value="email">email</option>
             </select>
           </label>
 
           <div className="flex items-end text-sm text-slate-500">
-            {loading ? "Loading..." : `${items.length} inquiries`}
+            {loading ? t("inquiries.loading") : `${items.length} ${t("inquiries.countSuffix")}`}
           </div>
         </div>
       </section>

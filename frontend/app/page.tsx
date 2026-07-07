@@ -6,6 +6,7 @@ import { getHealth, getInquiries } from "@/lib/api";
 import type { HealthResponse, InquiryListResponse } from "@/lib/api";
 import { InquiryListTable } from "@/components/InquiryListTable";
 import { StatCard } from "@/components/StatCard";
+import { useI18n } from "@/lib/i18n";
 
 export default function DashboardPage() {
   const [health, setHealth] = useState<HealthResponse | null>(null);
@@ -13,6 +14,7 @@ export default function DashboardPage() {
   const [inquiries, setInquiries] = useState<InquiryListResponse | null>(null);
   const [inquiryError, setInquiryError] = useState("");
   const [loading, setLoading] = useState(true);
+  const { t } = useI18n();
 
   useEffect(() => {
     let mounted = true;
@@ -65,26 +67,26 @@ export default function DashboardPage() {
       <section className="rounded-lg border border-line bg-white p-6 shadow-subtle">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div>
-            <h1 className="text-2xl font-semibold text-ink">Industrial Automation Inquiry Agent</h1>
+            <h1 className="text-2xl font-semibold text-ink">{t("dashboard.title")}</h1>
             <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
-              Inquiry qualification assistant for PLC, VFD, HMI and Industrial Switch export sales.
+              {t("dashboard.description")}
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
               <Link href="/analyze" className="focus-ring rounded-md bg-accent px-4 py-2 text-sm font-semibold text-white">
-                Analyze Inquiry
+                {t("dashboard.ctaAnalyze")}
               </Link>
               <Link href="/inquiries" className="focus-ring rounded-md border border-line bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
-                Inquiry List
+                {t("dashboard.ctaList")}
               </Link>
             </div>
           </div>
 
           <div className="rounded-md border border-line bg-panel px-4 py-3 text-sm">
-            <div className="font-semibold text-slate-700">Backend Status</div>
+            <div className="font-semibold text-slate-700">{t("dashboard.backendStatus")}</div>
             {health ? (
               <div className="mt-1 text-emerald-700">{health.status} · {health.service}</div>
             ) : (
-              <div className="mt-1 text-slate-500">{loading ? "Checking..." : "Unavailable"}</div>
+              <div className="mt-1 text-slate-500">{loading ? t("dashboard.checking") : t("dashboard.unavailable")}</div>
             )}
           </div>
         </div>
@@ -93,19 +95,19 @@ export default function DashboardPage() {
       {healthError ? <Alert message={healthError} /> : null}
 
       <div className="grid gap-4 md:grid-cols-4">
-        <StatCard label="Total Inquiries" value={stats.total} caption="Loaded from backend database" />
-        <StatCard label="Pending Review" value={stats.pending} caption="Needs sales action" />
-        <StatCard label="Analyzed" value={stats.analyzed} caption="Agent result available" />
-        <StatCard label="Recent Inquiries" value={stats.recent.length} caption="Latest records" />
+        <StatCard label={t("dashboard.total")} value={stats.total} caption={t("dashboard.totalCaption")} />
+        <StatCard label={t("dashboard.pending")} value={stats.pending} caption={t("dashboard.pendingCaption")} />
+        <StatCard label={t("dashboard.analyzed")} value={stats.analyzed} caption={t("dashboard.analyzedCaption")} />
+        <StatCard label={t("dashboard.recent")} value={stats.recent.length} caption={t("dashboard.recentCaption")} />
       </div>
 
       {inquiryError && !healthError ? <Alert message={inquiryError} /> : null}
 
       <section>
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-ink">Recent Inquiries</h2>
+          <h2 className="text-lg font-semibold text-ink">{t("dashboard.recent")}</h2>
           <Link href="/inquiries" className="focus-ring rounded-sm text-sm font-semibold text-accent">
-            View all
+            {t("dashboard.viewAll")}
           </Link>
         </div>
         <InquiryListTable items={stats.recent} />

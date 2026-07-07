@@ -1,22 +1,28 @@
-# API Overview
+# API 概览 API Overview
 
-Base URL:
+Backend base URL:
 
 ```text
 http://127.0.0.1:8000
 ```
 
-## GET /api/health
+Swagger:
 
-Purpose: Check backend availability.
-
-Request:
-
-```bash
-curl http://127.0.0.1:8000/api/health
+```text
+http://127.0.0.1:8000/docs
 ```
 
-Response:
+## 1. GET /api/health
+
+功能：健康检查。
+
+是否写数据库：否。
+
+是否触发 Agent：否。
+
+是否需要人工审核：否。
+
+响应示例：
 
 ```json
 {
@@ -25,17 +31,17 @@ Response:
 }
 ```
 
-Database write: No.
+## 2. POST /api/inquiries/analyze
 
-Triggers Agent: No.
+功能：提交询盘并运行 Agent 分析。
 
-Requires human review: No.
+是否写数据库：是，保存 inquiry、agent_result、agent_run、agent_steps。
 
-## POST /api/inquiries/analyze
+是否触发 Agent：是。
 
-Purpose: Save an inquiry, run the Agent workflow, save the AgentResult and trace, and return structured analysis.
+是否需要人工审核：是，返回的英文回复草稿必须人工审核。
 
-Request:
+请求示例：
 
 ```json
 {
@@ -50,7 +56,7 @@ Request:
 }
 ```
 
-Response:
+响应示例：
 
 ```json
 {
@@ -58,133 +64,90 @@ Response:
   "inquiry_id": 1,
   "agent_result_id": 1,
   "agent_result": {
-    "inquiry_type": "website",
-    "customer_intent": "product_selection",
+    "inquiry_type": "replacement_request",
+    "customer_intent": "...",
     "product_category": "PLC",
-    "extracted_requirements": {
-      "product_category": "PLC",
-      "brand": "Siemens",
-      "technical_specs": {
-        "digital_inputs": "16DI",
-        "digital_outputs": "8DO",
-        "power_supply": "24V DC",
-        "communication": "RS485"
-      }
-    },
-    "missing_information": ["output_type"],
+    "extracted_requirements": {},
+    "missing_information": [],
     "matched_products": [],
     "clarification_questions": [],
-    "english_reply_draft": "Thank you for your inquiry...",
+    "english_reply_draft": "...",
     "risk_flags": [],
-    "sales_follow_up_suggestion": "Confirm missing parameters before quotation.",
-    "confidence_score": 0.82,
+    "sales_follow_up_suggestion": "...",
+    "confidence_score": 0.61,
     "agent_trace": [],
     "retrieved_knowledge": []
   }
 }
 ```
 
-Database write: Yes. Writes inquiry, AgentResult, AgentRun, and AgentStep records.
+## 3. GET /api/inquiries
 
-Triggers Agent: Yes.
+功能：查询询盘列表。
 
-Requires human review: Yes, before any customer-facing reply.
+是否写数据库：否。
 
-## GET /api/inquiries
+是否触发 Agent：否。
 
-Purpose: Return persisted inquiry list.
+是否需要人工审核：列表用于进入人工审核工作流。
 
-Query parameters:
+可选参数：
 
-- `status`
-- `channel`
-- `product_category`
-- `limit`
-- `offset`
-
-Request:
-
-```bash
-curl "http://127.0.0.1:8000/api/inquiries?limit=10"
+```text
+status
+channel
+product_category
+limit
+offset
 ```
 
-Response:
+响应字段包括：
+
+```text
+id
+channel
+customer_name
+company
+country
+subject
+status
+product_category
+confidence_score
+created_at
+updated_at
+```
+
+## 4. GET /api/inquiries/{id}
+
+功能：查询询盘详情。
+
+是否写数据库：否。
+
+是否触发 Agent：否。
+
+是否需要人工审核：用于人工查看 AgentResult 和提交 Review。
+
+响应结构：
 
 ```json
 {
-  "status": "success",
-  "items": [
-    {
-      "id": 1,
-      "channel": "website",
-      "customer_name": "John Smith",
-      "company": "ABC Automation",
-      "country": "Vietnam",
-      "subject": "PLC inquiry",
-      "status": "pending_review",
-      "product_category": "PLC",
-      "confidence_score": 0.82,
-      "created_at": "2026-06-26T10:00:00",
-      "updated_at": "2026-06-26T10:00:00"
-    }
-  ],
-  "limit": 10,
-  "offset": 0
-}
-```
-
-Database write: No.
-
-Triggers Agent: No.
-
-Requires human review: No, but returned records may be pending review.
-
-## GET /api/inquiries/{id}
-
-Purpose: Return inquiry detail, latest AgentResult, and review logs.
-
-Request:
-
-```bash
-curl http://127.0.0.1:8000/api/inquiries/1
-```
-
-Response:
-
-```json
-{
-  "inquiry": {
-    "id": 1,
-    "channel": "website",
-    "customer_name": "John Smith",
-    "customer_email": "john@example.com",
-    "company": "ABC Automation",
-    "country": "Vietnam",
-    "subject": "PLC inquiry",
-    "message": "We need a Siemens compatible PLC...",
-    "status": "pending_review"
-  },
-  "agent_result": {
-    "product_category": "PLC",
-    "matched_products": [],
-    "agent_trace": [],
-    "retrieved_knowledge": []
-  },
+  "inquiry": {},
+  "agent_result": {},
   "review_logs": []
 }
 ```
 
-Database write: No.
+## 5. POST /api/inquiries/{id}/review
 
-Triggers Agent: No.
+功能：提交人工审核结果。
 
-Requires human review: The detail page is designed for human review.
+是否写数据库：是，保存 review_log 并更新 inquiry status。
 
-## POST /api/inquiries/{id}/review
+是否触发 Agent：否。
 
-Purpose: Save a human review decision and edited reply draft.
+是否需要人工审核：这就是人工审核动作。
 
-Request:
+请求示例：
 
 ```json
 {
@@ -195,7 +158,7 @@ Request:
 }
 ```
 
-Response:
+响应示例：
 
 ```json
 {
@@ -205,45 +168,27 @@ Response:
 }
 ```
 
-Database write: Yes. Writes review log and updates inquiry status.
+注意：该 API 不发送邮件，只记录人工审核状态和编辑草稿。
 
-Triggers Agent: No.
+## 6. GET /api/inquiries/samples
 
-Requires human review: This endpoint records the review.
+功能：读取样例询盘。
 
-## GET /api/inquiries/samples
+是否写数据库：否。
 
-Purpose: Return synthetic demo inquiries for frontend loading.
+是否触发 Agent：否。
 
-Request:
+是否需要人工审核：否。
 
-```bash
-curl http://127.0.0.1:8000/api/inquiries/samples
-```
+用途：前端 Analyze 页面加载 PLC / VFD / HMI / Industrial Switch 样例。
 
-Response:
+## 7. 边界说明
 
-```json
-{
-  "status": "success",
-  "samples": [
-    {
-      "id": "inq_plc_001",
-      "channel": "website",
-      "subject": "PLC module inquiry",
-      "message": "We need a Siemens compatible PLC...",
-      "expected_category": "PLC"
-    }
-  ]
-}
-```
+API 不提供：
 
-Database write: No.
-
-Triggers Agent: No.
-
-Requires human review: No.
-
-## Boundary
-
-APIs do not quote price, promise stock, promise lead time, or send emails automatically. Reply drafts are internal and must be reviewed by a sales user.
+- 自动报价。
+- 库存承诺。
+- 交期承诺。
+- 自动邮件发送。
+- 登录权限。
+- CRM/ERP 集成。

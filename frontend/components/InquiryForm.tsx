@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import type { InquiryInput, SampleInquiry } from "@/lib/types";
 import { getSampleInquiries } from "@/lib/api";
+import { useI18n } from "@/lib/i18n";
 
 const emptyForm: InquiryInput = {
   channel: "website",
@@ -36,6 +37,7 @@ export function InquiryForm({
   const [selectedSample, setSelectedSample] = useState("");
   const [sampleError, setSampleError] = useState("");
   const [formError, setFormError] = useState("");
+  const { t } = useI18n();
 
   useEffect(() => {
     let mounted = true;
@@ -48,14 +50,14 @@ export function InquiryForm({
       })
       .catch(() => {
         if (mounted) {
-          setSampleError("Sample inquiries are not available.");
+          setSampleError(t("form.sampleUnavailable"));
         }
       });
 
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [t]);
 
   const sampleOptions = useMemo(
     () =>
@@ -96,7 +98,7 @@ export function InquiryForm({
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
     if (!form.message.trim()) {
-      setFormError("Message is required before analysis.");
+      setFormError(t("form.messageRequired"));
       return;
     }
 
@@ -111,13 +113,13 @@ export function InquiryForm({
     <form onSubmit={handleSubmit} className="space-y-5 rounded-lg border border-line bg-white p-5 shadow-subtle">
       <div className="grid gap-4 md:grid-cols-2">
         <label className="space-y-1">
-          <span className="text-sm font-medium text-slate-700">Load Sample Inquiry</span>
+          <span className="text-sm font-medium text-slate-700">{t("form.loadSample")}</span>
           <select
             value={selectedSample}
             onChange={(event) => loadSample(event.target.value)}
             className="focus-ring w-full rounded-md border border-line bg-white px-3 py-2 text-sm"
           >
-            <option value="">Manual input</option>
+            <option value="">{t("form.manualInput")}</option>
             {sampleOptions.map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}
@@ -127,14 +129,14 @@ export function InquiryForm({
         </label>
 
         <label className="space-y-1">
-          <span className="text-sm font-medium text-slate-700">Channel</span>
+          <span className="text-sm font-medium text-slate-700">{t("form.channel")}</span>
           <select
             value={form.channel}
             onChange={(event) => updateField("channel", event.target.value)}
             className="focus-ring w-full rounded-md border border-line bg-white px-3 py-2 text-sm"
           >
-            <option value="website">Website Inquiry</option>
-            <option value="email">Email Inquiry</option>
+            <option value="website">{t("form.websiteInquiry")}</option>
+            <option value="email">{t("form.emailInquiry")}</option>
           </select>
         </label>
       </div>
@@ -143,22 +145,22 @@ export function InquiryForm({
       {formError ? <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{formError}</div> : null}
 
       <div className="grid gap-4 md:grid-cols-2">
-        <Field label="Customer Name" value={form.customer_name || ""} onChange={(value) => updateField("customer_name", value)} />
-        <Field label="Customer Email" value={form.customer_email || ""} onChange={(value) => updateField("customer_email", value)} />
-        <Field label="Company" value={form.company || ""} onChange={(value) => updateField("company", value)} />
-        <Field label="Country" value={form.country || ""} onChange={(value) => updateField("country", value)} />
+        <Field label={t("form.customerName")} value={form.customer_name || ""} onChange={(value) => updateField("customer_name", value)} />
+        <Field label={t("form.customerEmail")} value={form.customer_email || ""} onChange={(value) => updateField("customer_email", value)} />
+        <Field label={t("form.company")} value={form.company || ""} onChange={(value) => updateField("company", value)} />
+        <Field label={t("form.country")} value={form.country || ""} onChange={(value) => updateField("country", value)} />
       </div>
 
-      <Field label="Subject" value={form.subject || ""} onChange={(value) => updateField("subject", value)} />
+      <Field label={t("form.subject")} value={form.subject || ""} onChange={(value) => updateField("subject", value)} />
 
       <label className="space-y-1">
-        <span className="text-sm font-medium text-slate-700">Message</span>
+        <span className="text-sm font-medium text-slate-700">{t("form.message")}</span>
         <textarea
           value={form.message}
           onChange={(event) => updateField("message", event.target.value)}
           rows={7}
           className="focus-ring w-full rounded-md border border-line bg-white px-3 py-2 text-sm leading-6"
-          placeholder="Paste the website or email inquiry here."
+          placeholder={t("form.messagePlaceholder")}
         />
       </label>
 
@@ -168,7 +170,7 @@ export function InquiryForm({
           disabled={submitting}
           className="focus-ring rounded-md bg-accent px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {submitting ? "Analyzing..." : "Analyze Inquiry"}
+          {submitting ? t("form.analyzing") : t("form.submit")}
         </button>
       </div>
     </form>

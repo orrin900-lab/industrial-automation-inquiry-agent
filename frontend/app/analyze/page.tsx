@@ -6,11 +6,13 @@ import { analyzeInquiry } from "@/lib/api";
 import type { AnalyzeResponse, InquiryInput } from "@/lib/types";
 import { AgentResultView } from "@/components/AgentResultView";
 import { InquiryForm } from "@/components/InquiryForm";
+import { useI18n } from "@/lib/i18n";
 
 export default function AnalyzePage() {
   const [result, setResult] = useState<AnalyzeResponse | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const { t } = useI18n();
 
   async function handleAnalyze(payload: InquiryInput) {
     setSubmitting(true);
@@ -30,9 +32,9 @@ export default function AnalyzePage() {
   return (
     <div className="space-y-6">
       <section>
-        <h1 className="text-2xl font-semibold text-ink">Analyze Inquiry</h1>
+        <h1 className="text-2xl font-semibold text-ink">{t("analyze.title")}</h1>
         <p className="mt-2 text-sm text-slate-600">
-          Submit a website or email inquiry for structured qualification.
+          {t("analyze.description")}
         </p>
       </section>
 
@@ -49,11 +51,11 @@ export default function AnalyzePage() {
           <div className="rounded-lg border border-line bg-white p-5 shadow-subtle">
             <div className="grid gap-4 md:grid-cols-3">
               <div>
-                <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">Inquiry ID</div>
+                <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t("analyze.inquiryId")}</div>
                 <div className="mt-1 text-lg font-semibold text-ink">#{result.inquiry_id}</div>
               </div>
               <div>
-                <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">Agent Result ID</div>
+                <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t("analyze.agentResultId")}</div>
                 <div className="mt-1 text-lg font-semibold text-ink">#{result.agent_result_id}</div>
               </div>
               <div className="flex items-end">
@@ -61,7 +63,7 @@ export default function AnalyzePage() {
                   href={`/inquiries/${result.inquiry_id}`}
                   className="focus-ring rounded-md bg-accent px-4 py-2 text-sm font-semibold text-white"
                 >
-                  View Detail
+                  {t("analyze.viewDetail")}
                 </Link>
               </div>
             </div>

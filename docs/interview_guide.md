@@ -1,105 +1,94 @@
-# Interview Guide
+# 面试讲解 Interview Guide
 
-## 30-Second Introduction
+## 1. 30 秒项目介绍
 
-This is a full-stack AI Agent application for industrial automation export inquiry qualification. It helps sales users analyze customer inquiries for PLC, VFD, HMI, and Industrial Switch products. The system extracts structured requirements, retrieves knowledge sources, recommends candidate products, drafts an English reply, and records human review decisions. It uses Next.js, FastAPI, PostgreSQL, Docker Compose, lightweight RAG, fallback rules, and Agent Trace observability.
+Industrial Automation Inquiry Agent 是一个面向工业自动化外贸场景的 full-stack AI Agent 项目。它帮助客服和业务员处理 PLC、VFD、HMI、工业交换机等产品询盘，把非结构化英文询盘转换为结构化 AgentResult，并提供候选产品、缺失信息、RAG 检索来源、风险提示和英文回复草稿。系统使用 Next.js、FastAPI、PostgreSQL 和 Docker Compose，并保留 Human-in-the-loop 人工审核。
 
-## 2-Minute Introduction
+## 2. 2 分钟项目介绍
 
-The project started as a C+ prototype to validate the Agent workflow before building a more engineered A-stage system. The current version has a Next.js sales console, FastAPI backend, PostgreSQL persistence, Docker Compose startup, and a reusable Agent Core.
+这个项目从 C+ Streamlit 原型演进到 A 阶段工程化版本。C+ 阶段验证了 Agent workflow、fallback 规则、可选 LLM JSON 抽取、轻量 RAG、Agent Trace 和结构化输出。A 阶段将核心能力封装为 FastAPI，增加 PostgreSQL 持久化、Next.js 前端后台、Docker Compose 一键启动，并补充 README、docs、截图和人工复测报告。
 
-The Agent workflow classifies intent and product category, extracts technical requirements, checks missing information, retrieves knowledge from Markdown files, matches candidate products from a repository, drafts an English reply, and checks business risks. Every step returns structured data and writes execution trace records. The frontend displays the AgentResult, retrieved knowledge, candidate products, risk flags, and trace. A sales user can edit the reply draft and submit a human review status.
+项目重点不是自动客服回复，而是帮助业务员做询盘资格判断和风险控制。系统不会自动报价、不会承诺库存、不会承诺交期，也不会自动发送邮件。英文回复只作为 draft，必须由业务员人工审核。
 
-The product intentionally does not quote price, promise stock, promise lead time, or send emails automatically. This is because industrial automation sales involve technical compatibility, inventory uncertainty, and commercial risk.
+## 3. 技术架构讲解
 
-## Technical Architecture
+- Frontend: Next.js + TypeScript + Tailwind CSS。
+- Backend: FastAPI + Pydantic + SQLAlchemy。
+- Database: PostgreSQL，开发时保留 SQLite fallback。
+- Agent Core: intent classifier、category classifier、requirement extractor、retriever、product matcher、reply draft generator、risk checker。
+- RAG: 当前为 lightweight keyword retriever，后续可替换 Qdrant。
+- Deployment: Docker Compose 启动 postgres、backend、frontend。
 
-```mermaid
-flowchart TD
-    F[Next.js Frontend] --> B[FastAPI Backend]
-    B --> A[Agent Core]
-    A --> R[Lightweight RAG]
-    A --> P[Product Repository]
-    B --> DB[(PostgreSQL)]
-```
+## 4. Agent 工作流讲解
 
-The backend is the orchestration boundary. API routes are thin and delegate business work to services. The Agent Core is separated from repositories and retrievers so product data and RAG storage can evolve independently.
+Agent 接收 `InquiryInput` 后，依次执行：
 
-## Agent Workflow Explanation
+1. Intent Classifier：识别客户意图。
+2. Product Category Classifier：判断 PLC / VFD / HMI / Industrial Switch。
+3. Requirement Extractor：抽取 brand、model、quantity、technical_specs 等字段。
+4. Missing Info Checker：判断缺失信息。
+5. Knowledge Retriever：检索 FAQ、selection rules、email templates。
+6. Product Matcher：从 `products.csv` 推荐候选产品。
+7. Reply Draft Generator：生成英文回复草稿。
+8. Risk Checker：检查报价、库存、交期、兼容性等风险。
+9. Final AgentResult：返回结构化 JSON。
 
-The workflow turns unstructured text into a structured `AgentResult`:
+每一步都会写入 Agent Trace，便于调试和解释。
 
-1. Intent classification.
-2. Product category detection.
-3. Requirement extraction.
-4. Missing information check.
-5. Knowledge retrieval.
-6. Product candidate matching.
-7. Reply draft generation.
-8. Risk checking.
-9. Trace and persistence.
+## 5. 为什么不自动报价
 
-If LLM JSON extraction is disabled or fails, the system falls back to deterministic rules.
+工业自动化产品报价涉及型号、数量、库存、交期、运输、认证、付款条款等多个不确定因素。LLM 或规则系统直接报价会有商业风险，所以当前系统只做 quotation preparation 前的需求确认，不做自动报价。
 
-## Why Not Automatic Quotation?
+## 6. 为什么需要 Human-in-the-loop
 
-In industrial automation export sales, price depends on model confirmation, quantity, region, availability, supplier policy, and margin rules. Automatic quotation can create commercial and legal risk. The system only prepares structured context and a reply draft for human review.
+外贸询盘涉及客户关系和商业承诺。Human-in-the-loop 可以让业务员确认：
 
-## Why Human-In-The-Loop?
+- 参数是否完整。
+- 候选产品是否合适。
+- 回复是否安全。
+- 是否需要追问。
+- 是否可以进入报价准备。
 
-Human review is required because:
+## 7. 为什么先做 C+ 原型再做 A 阶段工程化
 
-- Technical parameters may be incomplete.
-- Brand compatibility may need verification.
-- Stock and lead time can change.
-- Certifications and authorization claims must be checked.
-- Final customer communication should be controlled by the sales team.
+C+ 原型用于快速验证 Agent workflow 是否合理；A 阶段再做 API、数据库、前端、Docker Compose 等工程化能力。这样可以避免一开始就过度工程化，也能保持业务逻辑清晰。
 
-## Why C+ Prototype Before A-Stage Engineering?
+## 8. 当前轻量 RAG 的边界
 
-The C+ prototype validated the workflow quickly with Streamlit, Pydantic schemas, fallback logic, product repository, lightweight RAG, trace, and demo exports. After validating the workflow, the A-stage system added FastAPI, PostgreSQL, Next.js, and Docker Compose. This reduced the risk of over-engineering before the Agent behavior was clear.
+当前 RAG 使用 Markdown chunk + keyword score，适合 Demo 和原型验证，但不是生产级向量检索。它不能处理复杂语义相似度，也不适合大规模知识库。
 
-## Lightweight RAG Boundary
+## 9. 后续如何升级 Qdrant
 
-The current RAG is keyword-based over Markdown chunks. It is transparent and easy to demo, but not enough for production semantic retrieval. It does not support embeddings, hybrid search, reranking, or large-scale document management.
+A6 建议：
 
-## How To Upgrade To Qdrant
+1. 增加 Qdrant Docker 服务。
+2. 增加 embedding 层。
+3. 将 Markdown chunks 写入 Qdrant。
+4. Retriever 支持 Qdrant search。
+5. 保留 keyword fallback。
+6. 保持 `retrieved_knowledge` 结构不变。
 
-Keep the retriever interface stable and replace the current lightweight retriever with:
+## 10. 这和普通客服机器人有什么区别
 
-- Embedding model.
-- Qdrant collection.
-- Chunk ingestion pipeline.
-- Metadata filtering.
-- Top-k semantic retrieval.
-- Optional reranking.
+普通客服机器人通常偏自然语言对话；这个项目偏业务流程和结构化决策支持。它输出 `AgentResult`，包含参数抽取、缺失信息、候选产品、RAG 来源、Agent Trace、风险提示和人工审核状态，适合沉淀到业务系统中。
 
-The Agent Core should continue calling the same retriever interface.
+## 11. LLM 出错怎么办
 
-## Q: How Is This Different From A Normal Chatbot?
+系统默认支持 fallback：
 
-A normal chatbot usually produces a conversation response. This system produces a structured, auditable business workflow result. It extracts fields, records missing information, retrieves sources, recommends products from a repository, produces trace logs, persists records, and requires human review.
+- 无 API Key 时使用规则逻辑。
+- LLM 返回非法 JSON 时 fallback 到规则抽取。
+- Agent Trace 会记录节点 mode。
+- 风险检查会阻止报价、库存、交期等不安全承诺。
 
-## Q: What If The LLM Makes A Mistake?
+## 12. 如何生产化
 
-The system has several safeguards:
+生产化方向：
 
-- Rule fallback if LLM is unavailable or returns invalid JSON.
-- Pydantic schemas for structured validation.
-- Candidate products must come from the product repository.
-- Risk checker flags unsafe claims.
-- Human review is mandatory before customer communication.
-- Agent Trace helps diagnose which step caused the issue.
-
-## Q: How Would You Productionize It?
-
-Recommended production path:
-
-- Add authentication and role-based access control.
-- Add Alembic migrations.
-- Replace lightweight RAG with Qdrant.
-- Add Redis and background jobs for long-running workflows.
-- Integrate CRM/ERP/email systems with approval gates.
-- Add observability: structured logs, metrics, tracing, audit logs.
-- Add test coverage for more real inquiry patterns.
-- Add deployment pipeline and environment-specific configuration.
+- Qdrant 替换轻量 RAG。
+- Alembic 数据库迁移。
+- Redis + async job queue。
+- 登录权限和 RBAC。
+- CRM/ERP/邮件系统集成。
+- 更完整的日志、指标、链路追踪和审计。
+- 更大规模真实数据测试。

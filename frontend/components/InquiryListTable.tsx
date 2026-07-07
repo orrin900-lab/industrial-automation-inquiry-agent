@@ -1,12 +1,17 @@
+"use client";
+
 import Link from "next/link";
 import type { InquiryListItem } from "@/lib/types";
-import { formatDate, formatPercent, statusLabel } from "@/lib/format";
+import { formatDate, formatPercent } from "@/lib/format";
+import { useI18n } from "@/lib/i18n";
 
 export function InquiryListTable({ items }: { items: InquiryListItem[] }) {
+  const { t, statusText } = useI18n();
+
   if (!items.length) {
     return (
       <div className="rounded-lg border border-line bg-white p-6 text-sm text-slate-500">
-        No inquiries found.
+        {t("table.noInquiries")}
       </div>
     );
   }
@@ -17,16 +22,16 @@ export function InquiryListTable({ items }: { items: InquiryListItem[] }) {
         <table className="min-w-full divide-y divide-line text-sm">
           <thead className="bg-panel text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
             <tr>
-              <th className="px-4 py-3">ID</th>
-              <th className="px-4 py-3">Channel</th>
-              <th className="px-4 py-3">Customer</th>
-              <th className="px-4 py-3">Company</th>
-              <th className="px-4 py-3">Country</th>
-              <th className="px-4 py-3">Subject</th>
-              <th className="px-4 py-3">Status</th>
-              <th className="px-4 py-3">Category</th>
-              <th className="px-4 py-3">Confidence</th>
-              <th className="px-4 py-3">Created</th>
+              <th className="px-4 py-3">{t("table.id")}</th>
+              <th className="px-4 py-3">{t("table.channel")}</th>
+              <th className="px-4 py-3">{t("table.customer")}</th>
+              <th className="px-4 py-3">{t("table.company")}</th>
+              <th className="px-4 py-3">{t("table.country")}</th>
+              <th className="px-4 py-3">{t("table.subject")}</th>
+              <th className="px-4 py-3">{t("table.status")}</th>
+              <th className="px-4 py-3">{t("table.category")}</th>
+              <th className="px-4 py-3">{t("table.confidence")}</th>
+              <th className="px-4 py-3">{t("table.created")}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-line">
@@ -43,10 +48,10 @@ export function InquiryListTable({ items }: { items: InquiryListItem[] }) {
                 <td className="px-4 py-3">{item.country || "-"}</td>
                 <td className="max-w-[260px] px-4 py-3">
                   <Link href={`/inquiries/${item.id}`} className="focus-ring rounded-sm text-slate-800 hover:text-accent">
-                    {item.subject || "Untitled inquiry"}
+                    {item.subject || t("table.untitled")}
                   </Link>
                 </td>
-                <td className="px-4 py-3">{statusLabel(item.status)}</td>
+                <td className="px-4 py-3">{statusText(item.status)}</td>
                 <td className="px-4 py-3">{item.product_category || "-"}</td>
                 <td className="px-4 py-3">{formatPercent(item.confidence_score)}</td>
                 <td className="px-4 py-3 text-slate-500">{formatDate(item.created_at)}</td>

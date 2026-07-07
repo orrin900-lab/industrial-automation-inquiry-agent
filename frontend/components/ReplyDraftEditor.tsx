@@ -1,5 +1,7 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
+
 export function ReplyDraftEditor({
   value,
   onChange
@@ -7,9 +9,11 @@ export function ReplyDraftEditor({
   value: string;
   onChange: (value: string) => void;
 }) {
+  const { t } = useI18n();
+
   return (
     <section className="rounded-lg border border-line bg-white p-5 shadow-subtle">
-      <h2 className="text-base font-semibold text-ink">English Reply Draft</h2>
+      <h2 className="text-base font-semibold text-ink">{t("reply.title")}</h2>
       <textarea
         value={value}
         onChange={(event) => onChange(event.target.value)}
@@ -17,7 +21,7 @@ export function ReplyDraftEditor({
         className="focus-ring mt-4 w-full rounded-md border border-line bg-white px-3 py-2 text-sm leading-6"
       />
       <p className="mt-2 text-xs text-slate-500">
-        This draft remains internal until a sales user reviews and sends it manually.
+        {t("reply.note")}
       </p>
     </section>
   );

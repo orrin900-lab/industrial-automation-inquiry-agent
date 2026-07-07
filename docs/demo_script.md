@@ -1,19 +1,17 @@
-# Demo Script
+# 演示脚本 Demo Script
 
-This script is intended for a short recording, GitHub demo, or interview walkthrough.
+推荐录屏时长：3-5 分钟。
 
-Recommended recording length: 3-5 minutes.
+推荐样例：PLC sample 或 VFD sample。PLC 样例适合展示缺失 output_type、候选产品、RAG 来源和 fallback trace。
 
-Recommended demo sample: PLC inquiry or VFD inquiry. PLC is a good default because it clearly shows product category detection, missing output type, candidate matching, RAG sources, and fallback trace steps.
-
-## 1. Start The Project
+## 1. 启动项目
 
 ```bash
 cd industrial-inquiry-agent
 docker-compose up --build
 ```
 
-Open:
+打开：
 
 ```text
 Frontend: http://127.0.0.1:3001
@@ -21,155 +19,119 @@ Backend API: http://127.0.0.1:8000
 Swagger: http://127.0.0.1:8000/docs
 ```
 
-Narration:
+讲解：
 
-"This project is a full-stack AI Agent application for industrial automation export inquiry qualification. Docker Compose starts PostgreSQL, FastAPI, and the Next.js sales console."
+> 这是一个面向工业自动化外贸询盘的 full-stack AI Agent 项目。Docker Compose 会启动 PostgreSQL、FastAPI backend 和 Next.js 前端后台。
 
-## 2. Dashboard
+## 2. Dashboard 首页
 
-Open `http://127.0.0.1:3001`.
+展示：
 
-Show:
+- Backend health。
+- 总询盘数。
+- 待审核数量。
+- 最近询盘。
+- 中英文语言切换。
 
-- Backend health.
-- Total inquiries.
-- Pending review count.
-- Analyzed count.
-- Recent inquiries.
+截图：`docs/screenshots/01_dashboard.png`
 
-Screenshot: `docs/screenshots/01_dashboard.png`
+## 3. Analyze Inquiry 询盘分析
 
-Narration:
+步骤：
 
-"The dashboard confirms that the frontend can reach the FastAPI backend and shows persisted inquiry records from PostgreSQL."
+1. 打开 Analyze 页面。
+2. 加载 PLC 或 VFD sample。
+3. 提交分析。
 
-## 3. Analyze Inquiry
+截图：`docs/screenshots/02_analyze_form.png`
 
-Go to `Analyze Inquiry`.
+讲解：
 
-Steps:
+> 系统会保存原始询盘，运行 Agent workflow，并返回结构化 AgentResult。
 
-1. Load a sample inquiry.
-2. Choose Website Inquiry or Email Inquiry.
-3. Submit analysis.
+## 4. AgentResult 结构化结果
 
-Screenshot: `docs/screenshots/02_analyze_form.png`
+展示：
 
-Narration:
+- Inquiry Type。
+- Customer Intent。
+- Product Category。
+- Confidence Score。
+- Extracted Requirements。
+- Clarification Questions。
 
-"The user can paste a raw customer inquiry or load a demo sample. The backend persists the inquiry, runs the Agent workflow, stores the result and trace, then returns a structured AgentResult."
+截图：`docs/screenshots/03_agent_result.png`
 
-## 4. AgentResult
+## 5. Candidate Products 候选产品
 
-Show:
+展示：
 
-- Inquiry type.
-- Customer intent.
-- Product category.
-- Confidence score.
-- Extracted requirements.
-- Clarification questions.
-- Sales follow-up suggestion.
+- product_id。
+- product_name。
+- match_score。
+- match_reason。
+- missing_confirmations。
 
-Screenshot: `docs/screenshots/03_agent_result.png`
+截图：`docs/screenshots/06_candidate_products.png`
 
-Narration:
+## 6. Retrieved Knowledge 检索来源
 
-"The AgentResult is structured JSON under the hood, not just a free-form LLM answer. This makes it easier to persist, audit, and display."
+展示：
 
-## 5. Candidate Products
+- source_file。
+- section_title。
+- score。
+- content preview。
 
-Show candidate products.
+截图：`docs/screenshots/07_retrieved_knowledge.png`
 
-Screenshot: `docs/screenshots/06_candidate_products.png`
+讲解：
 
-Narration:
+> 当前使用 lightweight Markdown RAG，下一轮 A6 可以替换为 Qdrant。
 
-"Candidate products come from the product repository, not from hallucinated LLM output. Each candidate has a match score, match reason, and missing confirmations."
+## 7. Agent Trace 执行轨迹
 
-## 6. Missing Information
+展示：
 
-Show missing information and clarification questions.
+- step_name。
+- mode: rule / fallback / retrieval。
+- success。
+- latency_ms。
+- output_summary。
 
-Narration:
+截图：`docs/screenshots/08_agent_trace.png`
 
-"The system is not trying to close the deal automatically. It identifies what still needs to be confirmed, such as output type, communication protocol, voltage, or quantity."
+## 8. Inquiry Detail 详情页
 
-## 7. Retrieved Knowledge
+展示：
 
-Show Retrieved Knowledge Sources.
+- Original Inquiry。
+- AgentResult。
+- Risk Flags。
+- English Reply Draft。
 
-Screenshot: `docs/screenshots/07_retrieved_knowledge.png`
+截图：`docs/screenshots/05_inquiry_detail.png`
 
-Narration:
+## 9. Human Review 人工审核
 
-"The current prototype uses a lightweight Markdown RAG pipeline. Each retrieved source includes metadata, score, and content preview. Later this retriever can be replaced by Qdrant."
+步骤：
 
-## 8. Agent Trace
+1. 检查 English Reply Draft。
+2. 填写 reviewer_note。
+3. 提交 review_status。
+4. 查看 Review Logs。
 
-Show Agent Execution Trace.
+截图：`docs/screenshots/09_review_form.png`
 
-Screenshot: `docs/screenshots/08_agent_trace.png`
+讲解：
 
-Narration:
+> Review 只记录人工审核状态和草稿，不会自动发送邮件。
 
-"The trace records which steps ran, whether they used rule, fallback, retrieval, or hybrid mode, and how long each step took. This is useful for debugging and trust."
+## 10. Swagger API
 
-## 9. Inquiry Detail
+打开 `http://127.0.0.1:8000/docs`。
 
-Click View Detail.
-
-Show:
-
-- Original inquiry.
-- AgentResult sections.
-- English reply draft.
-- Risk flags.
-- Review form.
-
-Screenshot: `docs/screenshots/05_inquiry_detail.png`
-
-Narration:
-
-"The detail page is designed for the sales user to review the AI output before taking action."
-
-## 10. Edit Reply Draft And Submit Review
-
-Steps:
-
-1. Edit the English Reply Draft.
-2. Fill reviewer note.
-3. Submit review as `need_clarification`, `ready_for_quotation`, or another status.
-4. Show Review Logs.
-
-Screenshot: `docs/screenshots/09_review_form.png`
-
-Narration:
-
-"The review action only records a human decision. It does not send email and does not quote price."
-
-## 11. Inquiry List
-
-Open Inquiry List.
-
-Show:
-
-- Persisted inquiry rows.
-- Status filter.
-- Channel filter.
-- Detail links.
-
-Screenshot: `docs/screenshots/04_inquiry_list.png`
-
-Narration:
-
-"The inquiry list is backed by PostgreSQL. Docker Compose uses a named volume so data remains after restarting containers."
-
-## 12. Swagger And Docker Status
-
-Open `http://127.0.0.1:8000/docs`.
-
-Show:
+展示：
 
 - `GET /api/health`
 - `POST /api/inquiries/analyze`
@@ -178,31 +140,16 @@ Show:
 - `POST /api/inquiries/{id}/review`
 - `GET /api/inquiries/samples`
 
-Screenshot: `docs/screenshots/10_swagger_api.png`
+截图：`docs/screenshots/10_swagger_api.png`
 
-If recording locally, also show Docker Desktop or terminal output from:
+## 11. 结尾边界说明
 
-```bash
-docker-compose ps
-```
+结尾必须说明：
 
-Target screenshot: `docs/screenshots/11_docker_compose_running.png` (currently pending).
-
-## 13. Boundary Statement
-
-End the demo with:
-
-"This prototype uses high-fidelity simulated data. It does not quote price, promise stock, promise lead time, or send emails automatically. It is an AI-assisted workflow with human review, not an autonomous sales closer."
-
-Recommended narration order for the full recording:
-
-1. Docker Compose startup.
-2. Dashboard.
-3. Analyze.
-4. AgentResult.
-5. RAG Sources.
-6. Agent Trace.
-7. Inquiry Detail.
-8. Review.
-9. PostgreSQL persistence.
-10. Prototype boundary.
+- 当前使用高仿真模拟数据。
+- 不自动报价。
+- 不承诺库存。
+- 不承诺交期。
+- 不自动发送邮件。
+- 英文回复草稿必须人工审核。
+- 当前轻量 RAG 不是最终生产级向量数据库。

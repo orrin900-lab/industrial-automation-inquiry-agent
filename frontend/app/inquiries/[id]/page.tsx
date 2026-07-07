@@ -7,7 +7,8 @@ import type { InquiryDetail } from "@/lib/types";
 import { AgentResultView } from "@/components/AgentResultView";
 import { ReplyDraftEditor } from "@/components/ReplyDraftEditor";
 import { ReviewForm } from "@/components/ReviewForm";
-import { formatDate, statusLabel } from "@/lib/format";
+import { formatDate } from "@/lib/format";
+import { useI18n } from "@/lib/i18n";
 
 export default function InquiryDetailPage() {
   const params = useParams<{ id: string }>();
@@ -16,6 +17,7 @@ export default function InquiryDetailPage() {
   const [replyDraft, setReplyDraft] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const { t, statusText } = useI18n();
 
   const loadDetail = useCallback(async () => {
     setLoading(true);
@@ -37,7 +39,7 @@ export default function InquiryDetailPage() {
   }, [loadDetail]);
 
   if (loading) {
-    return <div className="rounded-lg border border-line bg-white p-6 text-sm text-slate-500">Loading inquiry detail...</div>;
+    return <div className="rounded-lg border border-line bg-white p-6 text-sm text-slate-500">{t("detail.loading")}</div>;
   }
 
   if (error) {
@@ -45,30 +47,30 @@ export default function InquiryDetailPage() {
   }
 
   if (!detail) {
-    return <div className="rounded-lg border border-line bg-white p-6 text-sm text-slate-500">Inquiry not found.</div>;
+    return <div className="rounded-lg border border-line bg-white p-6 text-sm text-slate-500">{t("detail.notFound")}</div>;
   }
 
   return (
     <div className="space-y-6">
       <section>
-        <h1 className="text-2xl font-semibold text-ink">Inquiry #{detail.inquiry.id}</h1>
-        <p className="mt-2 text-sm text-slate-600">{detail.inquiry.subject || "Untitled inquiry"}</p>
+        <h1 className="text-2xl font-semibold text-ink">{t("detail.titlePrefix")} #{detail.inquiry.id}</h1>
+        <p className="mt-2 text-sm text-slate-600">{detail.inquiry.subject || t("table.untitled")}</p>
       </section>
 
       <section className="rounded-lg border border-line bg-white p-5 shadow-subtle">
-        <h2 className="text-base font-semibold text-ink">Original Inquiry</h2>
+        <h2 className="text-base font-semibold text-ink">{t("detail.originalInquiry")}</h2>
         <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <Info label="Channel" value={detail.inquiry.channel} />
-          <Info label="Status" value={statusLabel(detail.inquiry.status)} />
-          <Info label="Customer" value={detail.inquiry.customer_name || "-"} />
-          <Info label="Email" value={detail.inquiry.customer_email || "-"} />
-          <Info label="Company" value={detail.inquiry.company || "-"} />
-          <Info label="Country" value={detail.inquiry.country || "-"} />
-          <Info label="Created" value={formatDate(detail.inquiry.created_at)} />
-          <Info label="Updated" value={formatDate(detail.inquiry.updated_at)} />
+          <Info label={t("detail.channel")} value={detail.inquiry.channel} />
+          <Info label={t("detail.status")} value={statusText(detail.inquiry.status)} />
+          <Info label={t("detail.customer")} value={detail.inquiry.customer_name || "-"} />
+          <Info label={t("detail.email")} value={detail.inquiry.customer_email || "-"} />
+          <Info label={t("detail.company")} value={detail.inquiry.company || "-"} />
+          <Info label={t("detail.country")} value={detail.inquiry.country || "-"} />
+          <Info label={t("detail.created")} value={formatDate(detail.inquiry.created_at)} />
+          <Info label={t("detail.updated")} value={formatDate(detail.inquiry.updated_at)} />
         </div>
         <div className="mt-5">
-          <h3 className="text-sm font-semibold text-slate-700">Message</h3>
+          <h3 className="text-sm font-semibold text-slate-700">{t("detail.message")}</h3>
           <p className="mt-2 rounded-md bg-panel p-3 text-sm leading-6 text-slate-700">{detail.inquiry.message}</p>
         </div>
       </section>
@@ -85,20 +87,20 @@ export default function InquiryDetailPage() {
         </>
       ) : (
         <div className="rounded-lg border border-line bg-white p-6 text-sm text-slate-500">
-          No agent result is available for this inquiry.
+          {t("detail.noAgentResult")}
         </div>
       )}
 
       <section className="rounded-lg border border-line bg-white p-5 shadow-subtle">
-        <h2 className="text-base font-semibold text-ink">Review Logs</h2>
+        <h2 className="text-base font-semibold text-ink">{t("detail.reviewLogs")}</h2>
         {!detail.review_logs.length ? (
-          <p className="mt-3 text-sm text-slate-500">No review logs yet.</p>
+          <p className="mt-3 text-sm text-slate-500">{t("detail.noReviewLogs")}</p>
         ) : (
           <div className="mt-4 space-y-3">
             {detail.review_logs.map((log) => (
               <article key={log.id} className="rounded-md border border-line bg-panel p-4 text-sm">
                 <div className="font-semibold text-ink">
-                  {log.reviewer_name} · {statusLabel(log.review_status)}
+                  {log.reviewer_name} · {statusText(log.review_status)}
                 </div>
                 <div className="mt-1 text-slate-500">{formatDate(log.created_at)}</div>
                 {log.reviewer_note ? <p className="mt-3 leading-6 text-slate-700">{log.reviewer_note}</p> : null}

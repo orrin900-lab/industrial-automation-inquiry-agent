@@ -1,0 +1,323 @@
+"use client";
+
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
+
+export type Language = "zh" | "en";
+
+const STORAGE_KEY = "industrial-agent-language";
+
+const dictionaries = {
+  zh: {
+    "app.subtitle": "外贸业务工作台",
+    "nav.dashboard": "首页 Dashboard",
+    "nav.analyze": "询盘分析 Analyze",
+    "nav.inquiries": "询盘列表 Inquiries",
+    "language.zh": "中文",
+    "language.en": "English",
+    "dashboard.title": "Industrial Automation Inquiry Agent",
+    "dashboard.description": "面向 PLC、变频器 VFD、HMI、工业交换机的外贸询盘需求确认与转化辅助 Agent。",
+    "dashboard.ctaAnalyze": "分析询盘",
+    "dashboard.ctaList": "查看询盘列表",
+    "dashboard.backendStatus": "后端状态 Backend Status",
+    "dashboard.checking": "检查中...",
+    "dashboard.unavailable": "不可用",
+    "dashboard.total": "总询盘数",
+    "dashboard.totalCaption": "来自后端数据库",
+    "dashboard.pending": "待人工审核",
+    "dashboard.pendingCaption": "需要业务员跟进",
+    "dashboard.analyzed": "已分析",
+    "dashboard.analyzedCaption": "已有 AgentResult",
+    "dashboard.recent": "最近询盘",
+    "dashboard.recentCaption": "最新记录",
+    "dashboard.viewAll": "查看全部",
+    "analyze.title": "询盘分析 Analyze Inquiry",
+    "analyze.description": "提交官网或邮件询盘，生成结构化需求、候选产品、风险提示和英文回复草稿。",
+    "analyze.inquiryId": "询盘 ID",
+    "analyze.agentResultId": "AgentResult ID",
+    "analyze.viewDetail": "查看详情",
+    "form.loadSample": "加载样例询盘",
+    "form.manualInput": "手动输入",
+    "form.channel": "询盘来源 Channel",
+    "form.websiteInquiry": "官网询盘 Website Inquiry",
+    "form.emailInquiry": "邮件询盘 Email Inquiry",
+    "form.customerName": "客户姓名",
+    "form.customerEmail": "客户邮箱",
+    "form.company": "公司",
+    "form.country": "国家/地区",
+    "form.subject": "主题",
+    "form.message": "询盘内容",
+    "form.messagePlaceholder": "粘贴官网或邮件询盘内容。",
+    "form.sampleUnavailable": "样例询盘暂不可用。",
+    "form.messageRequired": "请先填写询盘内容再提交分析。",
+    "form.analyzing": "分析中...",
+    "form.submit": "开始分析",
+    "inquiries.title": "询盘列表 Inquiry List",
+    "inquiries.description": "查看已分析询盘，并进入详情页进行业务跟进。",
+    "inquiries.status": "状态 Status",
+    "inquiries.channel": "来源 Channel",
+    "inquiries.allStatuses": "全部状态",
+    "inquiries.allChannels": "全部来源",
+    "inquiries.loading": "加载中...",
+    "inquiries.countSuffix": "条询盘",
+    "table.noInquiries": "暂无询盘。",
+    "table.id": "ID",
+    "table.channel": "来源",
+    "table.customer": "客户",
+    "table.company": "公司",
+    "table.country": "国家/地区",
+    "table.subject": "主题",
+    "table.status": "状态",
+    "table.category": "类别",
+    "table.confidence": "置信度",
+    "table.created": "创建时间",
+    "table.untitled": "未命名询盘",
+    "detail.loading": "正在加载询盘详情...",
+    "detail.notFound": "未找到询盘。",
+    "detail.titlePrefix": "询盘",
+    "detail.originalInquiry": "原始询盘 Original Inquiry",
+    "detail.channel": "来源",
+    "detail.status": "状态",
+    "detail.customer": "客户",
+    "detail.email": "邮箱",
+    "detail.company": "公司",
+    "detail.country": "国家/地区",
+    "detail.created": "创建时间",
+    "detail.updated": "更新时间",
+    "detail.message": "询盘内容",
+    "detail.noAgentResult": "该询盘暂无 AgentResult。",
+    "detail.reviewLogs": "审核记录 Review Logs",
+    "detail.noReviewLogs": "暂无审核记录。",
+    "agent.title": "AgentResult 结构化结果",
+    "agent.inquiryType": "询盘类型",
+    "agent.intent": "客户意图",
+    "agent.productCategory": "产品类别",
+    "agent.confidence": "置信度 Confidence Score",
+    "agent.extractedRequirements": "参数抽取 Extracted Requirements",
+    "agent.clarificationQuestions": "追问问题 Clarification Questions",
+    "agent.noQuestions": "暂无追问问题。",
+    "agent.followUp": "业务员跟进建议",
+    "agent.riskFlags": "风险提示 Risk Flags",
+    "agent.noRiskFlags": "暂无风险提示。",
+    "agent.jsonDebug": "JSON 调试信息",
+    "missing.title": "缺失信息 Missing Information",
+    "missing.empty": "未发现关键缺失字段。",
+    "products.title": "候选产品 Candidate Products",
+    "products.empty": "暂无候选产品。",
+    "products.missingConfirmations": "待确认项 Missing Confirmations",
+    "knowledge.title": "检索来源 Retrieved Knowledge",
+    "knowledge.empty": "暂无检索来源。",
+    "knowledge.source": "来源文件",
+    "knowledge.section": "章节",
+    "knowledge.score": "分数",
+    "knowledge.preview": "内容预览",
+    "trace.title": "Agent 执行轨迹 Agent Trace",
+    "trace.empty": "暂无执行轨迹。",
+    "trace.step": "节点",
+    "trace.mode": "模式",
+    "trace.success": "成功",
+    "trace.latency": "耗时",
+    "trace.output": "输出摘要",
+    "common.yes": "是",
+    "common.no": "否",
+    "reply.title": "英文回复草稿 English Reply Draft",
+    "reply.note": "该草稿仅供内部审核，必须由业务员确认后手动发送。",
+    "review.title": "人工审核 Human Review",
+    "review.reviewerName": "审核人",
+    "review.status": "审核状态",
+    "review.note": "审核备注",
+    "review.savedPrefix": "审核已保存为",
+    "review.error": "提交审核失败。",
+    "review.saving": "保存中...",
+    "review.submit": "提交审核",
+    "status.pending_analysis": "待分析 pending_analysis",
+    "status.analyzed": "已分析 analyzed",
+    "status.pending_review": "待审核 pending_review",
+    "status.need_clarification": "需追问 need_clarification",
+    "status.ready_for_quotation": "可进入报价准备 ready_for_quotation",
+    "status.invalid_lead": "无效线索 invalid_lead",
+    "status.completed": "已完成 completed"
+  },
+  en: {
+    "app.subtitle": "Sales operations console",
+    "nav.dashboard": "Dashboard",
+    "nav.analyze": "Analyze Inquiry",
+    "nav.inquiries": "Inquiry List",
+    "language.zh": "中文",
+    "language.en": "English",
+    "dashboard.title": "Industrial Automation Inquiry Agent",
+    "dashboard.description": "Inquiry qualification assistant for PLC, VFD, HMI and Industrial Switch export sales.",
+    "dashboard.ctaAnalyze": "Analyze Inquiry",
+    "dashboard.ctaList": "Inquiry List",
+    "dashboard.backendStatus": "Backend Status",
+    "dashboard.checking": "Checking...",
+    "dashboard.unavailable": "Unavailable",
+    "dashboard.total": "Total Inquiries",
+    "dashboard.totalCaption": "Loaded from backend database",
+    "dashboard.pending": "Pending Review",
+    "dashboard.pendingCaption": "Needs sales action",
+    "dashboard.analyzed": "Analyzed",
+    "dashboard.analyzedCaption": "Agent result available",
+    "dashboard.recent": "Recent Inquiries",
+    "dashboard.recentCaption": "Latest records",
+    "dashboard.viewAll": "View all",
+    "analyze.title": "Analyze Inquiry",
+    "analyze.description": "Submit a website or email inquiry for structured qualification.",
+    "analyze.inquiryId": "Inquiry ID",
+    "analyze.agentResultId": "AgentResult ID",
+    "analyze.viewDetail": "View Detail",
+    "form.loadSample": "Load Sample Inquiry",
+    "form.manualInput": "Manual input",
+    "form.channel": "Channel",
+    "form.websiteInquiry": "Website Inquiry",
+    "form.emailInquiry": "Email Inquiry",
+    "form.customerName": "Customer Name",
+    "form.customerEmail": "Customer Email",
+    "form.company": "Company",
+    "form.country": "Country",
+    "form.subject": "Subject",
+    "form.message": "Message",
+    "form.messagePlaceholder": "Paste the website or email inquiry here.",
+    "form.sampleUnavailable": "Sample inquiries are not available.",
+    "form.messageRequired": "Message is required before analysis.",
+    "form.analyzing": "Analyzing...",
+    "form.submit": "Analyze Inquiry",
+    "inquiries.title": "Inquiry List",
+    "inquiries.description": "Review analyzed inquiries and open each record for follow-up.",
+    "inquiries.status": "Status",
+    "inquiries.channel": "Channel",
+    "inquiries.allStatuses": "All statuses",
+    "inquiries.allChannels": "All channels",
+    "inquiries.loading": "Loading...",
+    "inquiries.countSuffix": "inquiries",
+    "table.noInquiries": "No inquiries found.",
+    "table.id": "ID",
+    "table.channel": "Channel",
+    "table.customer": "Customer",
+    "table.company": "Company",
+    "table.country": "Country",
+    "table.subject": "Subject",
+    "table.status": "Status",
+    "table.category": "Category",
+    "table.confidence": "Confidence",
+    "table.created": "Created",
+    "table.untitled": "Untitled inquiry",
+    "detail.loading": "Loading inquiry detail...",
+    "detail.notFound": "Inquiry not found.",
+    "detail.titlePrefix": "Inquiry",
+    "detail.originalInquiry": "Original Inquiry",
+    "detail.channel": "Channel",
+    "detail.status": "Status",
+    "detail.customer": "Customer",
+    "detail.email": "Email",
+    "detail.company": "Company",
+    "detail.country": "Country",
+    "detail.created": "Created",
+    "detail.updated": "Updated",
+    "detail.message": "Message",
+    "detail.noAgentResult": "No agent result is available for this inquiry.",
+    "detail.reviewLogs": "Review Logs",
+    "detail.noReviewLogs": "No review logs yet.",
+    "agent.title": "Agent Result",
+    "agent.inquiryType": "Inquiry Type",
+    "agent.intent": "Intent",
+    "agent.productCategory": "Product Category",
+    "agent.confidence": "Confidence",
+    "agent.extractedRequirements": "Extracted Requirements",
+    "agent.clarificationQuestions": "Clarification Questions",
+    "agent.noQuestions": "No clarification questions returned.",
+    "agent.followUp": "Sales Follow-up Suggestion",
+    "agent.riskFlags": "Risk Flags",
+    "agent.noRiskFlags": "No risk flags returned.",
+    "agent.jsonDebug": "JSON Debug",
+    "missing.title": "Missing Information",
+    "missing.empty": "No critical missing fields detected.",
+    "products.title": "Candidate Products",
+    "products.empty": "No candidate products returned.",
+    "products.missingConfirmations": "Missing confirmations",
+    "knowledge.title": "Retrieved Knowledge Sources",
+    "knowledge.empty": "No retrieved knowledge sources.",
+    "knowledge.source": "Source",
+    "knowledge.section": "Section",
+    "knowledge.score": "Score",
+    "knowledge.preview": "Preview",
+    "trace.title": "Agent Execution Trace",
+    "trace.empty": "No trace steps returned.",
+    "trace.step": "Step",
+    "trace.mode": "Mode",
+    "trace.success": "Success",
+    "trace.latency": "Latency",
+    "trace.output": "Output Summary",
+    "common.yes": "Yes",
+    "common.no": "No",
+    "reply.title": "English Reply Draft",
+    "reply.note": "This draft remains internal until a sales user reviews and sends it manually.",
+    "review.title": "Review Form",
+    "review.reviewerName": "Reviewer Name",
+    "review.status": "Review Status",
+    "review.note": "Reviewer Note",
+    "review.savedPrefix": "Review saved as",
+    "review.error": "Failed to submit review.",
+    "review.saving": "Saving...",
+    "review.submit": "Submit Review",
+    "status.pending_analysis": "Pending Analysis",
+    "status.analyzed": "Analyzed",
+    "status.pending_review": "Pending Review",
+    "status.need_clarification": "Need Clarification",
+    "status.ready_for_quotation": "Ready For Quotation",
+    "status.invalid_lead": "Invalid Lead",
+    "status.completed": "Completed"
+  }
+} as const;
+
+type TranslationKey = keyof typeof dictionaries.en;
+
+type I18nContextValue = {
+  language: Language;
+  setLanguage: (language: Language) => void;
+  t: (key: TranslationKey) => string;
+  statusText: (status?: string | null) => string;
+};
+
+const I18nContext = createContext<I18nContextValue | undefined>(undefined);
+
+export function LanguageProvider({ children }: { children: React.ReactNode }) {
+  const [language, setLanguageState] = useState<Language>("zh");
+
+  useEffect(() => {
+    const stored = window.localStorage.getItem(STORAGE_KEY);
+    if (stored === "zh" || stored === "en") {
+      setLanguageState(stored);
+    }
+  }, []);
+
+  function setLanguage(nextLanguage: Language) {
+    setLanguageState(nextLanguage);
+    window.localStorage.setItem(STORAGE_KEY, nextLanguage);
+  }
+
+  const value = useMemo<I18nContextValue>(() => {
+    const dictionary = dictionaries[language];
+    return {
+      language,
+      setLanguage,
+      t: (key) => dictionary[key] || dictionaries.en[key] || key,
+      statusText: (status) => {
+        if (!status) {
+          return "-";
+        }
+        const key = `status.${status}` as TranslationKey;
+        return dictionary[key] || dictionaries.en[key] || status;
+      }
+    };
+  }, [language]);
+
+  return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
+}
+
+export function useI18n() {
+  const value = useContext(I18nContext);
+  if (!value) {
+    throw new Error("useI18n must be used inside LanguageProvider.");
+  }
+  return value;
+}

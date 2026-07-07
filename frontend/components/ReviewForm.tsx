@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { submitReview } from "@/lib/api";
+import { useI18n } from "@/lib/i18n";
 
 const reviewStatuses = [
   "pending_review",
@@ -26,6 +27,7 @@ export function ReviewForm({
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const { t, statusText } = useI18n();
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -40,10 +42,10 @@ export function ReviewForm({
         edited_reply: editedReply,
         reviewer_note: reviewerNote
       });
-      setMessage(`Review saved as ${reviewStatus}.`);
+      setMessage(`${t("review.savedPrefix")} ${reviewStatus}.`);
       onSubmitted?.();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to submit review.");
+      setError(err instanceof Error ? err.message : t("review.error"));
     } finally {
       setSubmitting(false);
     }
@@ -51,11 +53,11 @@ export function ReviewForm({
 
   return (
     <section className="rounded-lg border border-line bg-white p-5 shadow-subtle">
-      <h2 className="text-base font-semibold text-ink">Review Form</h2>
+      <h2 className="text-base font-semibold text-ink">{t("review.title")}</h2>
       <form onSubmit={handleSubmit} className="mt-4 space-y-4">
         <div className="grid gap-4 md:grid-cols-2">
           <label className="space-y-1">
-            <span className="text-sm font-medium text-slate-700">Reviewer Name</span>
+            <span className="text-sm font-medium text-slate-700">{t("review.reviewerName")}</span>
             <input
               value={reviewerName}
               onChange={(event) => setReviewerName(event.target.value)}
@@ -65,7 +67,7 @@ export function ReviewForm({
           </label>
 
           <label className="space-y-1">
-            <span className="text-sm font-medium text-slate-700">Review Status</span>
+            <span className="text-sm font-medium text-slate-700">{t("review.status")}</span>
             <select
               value={reviewStatus}
               onChange={(event) => setReviewStatus(event.target.value)}
@@ -73,7 +75,7 @@ export function ReviewForm({
             >
               {reviewStatuses.map((status) => (
                 <option key={status} value={status}>
-                  {status}
+                  {statusText(status)}
                 </option>
               ))}
             </select>
@@ -81,7 +83,7 @@ export function ReviewForm({
         </div>
 
         <label className="space-y-1">
-          <span className="text-sm font-medium text-slate-700">Reviewer Note</span>
+          <span className="text-sm font-medium text-slate-700">{t("review.note")}</span>
           <textarea
             value={reviewerNote}
             onChange={(event) => setReviewerNote(event.target.value)}
@@ -99,7 +101,7 @@ export function ReviewForm({
             disabled={submitting}
             className="focus-ring rounded-md bg-accent px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {submitting ? "Saving..." : "Submit Review"}
+            {submitting ? t("review.saving") : t("review.submit")}
           </button>
         </div>
       </form>
