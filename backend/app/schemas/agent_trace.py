@@ -3,7 +3,16 @@
 from pydantic import BaseModel, Field
 
 
-TraceMode = Literal["rule", "llm", "fallback", "mock", "retrieval", "hybrid"]
+TraceMode = Literal[
+    "rule",
+    "llm",
+    "fallback",
+    "mock",
+    "retrieval",
+    "hybrid",
+    "qdrant",
+    "keyword_fallback",
+]
 
 
 class AgentTrace(BaseModel):

@@ -16,11 +16,9 @@ http://127.0.0.1:8000/docs
 
 功能：健康检查。
 
-是否写数据库：否。
-
-是否触发 Agent：否。
-
-是否需要人工审核：否。
+- 是否写数据库：否。
+- 是否触发 Agent：否。
+- 是否需要人工审核：否。
 
 响应示例：
 
@@ -35,11 +33,10 @@ http://127.0.0.1:8000/docs
 
 功能：提交询盘并运行 Agent 分析。
 
-是否写数据库：是，保存 inquiry、agent_result、agent_run、agent_steps。
-
-是否触发 Agent：是。
-
-是否需要人工审核：是，返回的英文回复草稿必须人工审核。
+- 是否写数据库：是，保存 inquiry、agent_result、agent_run、agent_steps。
+- 是否触发 Agent：是。
+- 是否触发 RAG：是，优先 Qdrant，失败时 keyword fallback。
+- 是否需要人工审核：是，返回的英文回复草稿必须人工审核。
 
 请求示例：
 
@@ -81,15 +78,28 @@ http://127.0.0.1:8000/docs
 }
 ```
 
+`retrieved_knowledge` 结构：
+
+```json
+{
+  "content": "...",
+  "score": 0.91,
+  "metadata": {
+    "source_file": "selection_rules.md",
+    "section_title": "PLC Selection",
+    "document_type": "selection_rules",
+    "chunk_id": "selection_rules.md:1:1"
+  }
+}
+```
+
 ## 3. GET /api/inquiries
 
 功能：查询询盘列表。
 
-是否写数据库：否。
-
-是否触发 Agent：否。
-
-是否需要人工审核：列表用于进入人工审核工作流。
+- 是否写数据库：否。
+- 是否触发 Agent：否。
+- 是否需要人工审核：列表用于进入人工审核工作流。
 
 可选参数：
 
@@ -121,11 +131,9 @@ updated_at
 
 功能：查询询盘详情。
 
-是否写数据库：否。
-
-是否触发 Agent：否。
-
-是否需要人工审核：用于人工查看 AgentResult 和提交 Review。
+- 是否写数据库：否。
+- 是否触发 Agent：否。
+- 是否需要人工审核：用于人工查看 AgentResult 并提交 Review。
 
 响应结构：
 
@@ -141,11 +149,9 @@ updated_at
 
 功能：提交人工审核结果。
 
-是否写数据库：是，保存 review_log 并更新 inquiry status。
-
-是否触发 Agent：否。
-
-是否需要人工审核：这就是人工审核动作。
+- 是否写数据库：是，保存 review_log 并更新 inquiry status。
+- 是否触发 Agent：否。
+- 是否需要人工审核：这就是人工审核动作。
 
 请求示例：
 
@@ -174,15 +180,30 @@ updated_at
 
 功能：读取样例询盘。
 
-是否写数据库：否。
-
-是否触发 Agent：否。
-
-是否需要人工审核：否。
+- 是否写数据库：否。
+- 是否触发 Agent：否。
+- 是否需要人工审核：否。
 
 用途：前端 Analyze 页面加载 PLC / VFD / HMI / Industrial Switch 样例。
 
-## 7. 边界说明
+## 7. Qdrant Index Build
+
+Qdrant 索引构建不是 HTTP API，而是后端脚本：
+
+```bash
+docker-compose exec backend python scripts/build_qdrant_index.py
+```
+
+或本地运行：
+
+```bash
+cd backend
+python scripts/build_qdrant_index.py
+```
+
+该脚本会读取 Markdown 知识库，切分 chunks，使用 hashing embedding 生成向量，并 upsert 到 Qdrant collection。
+
+## 8. 边界说明
 
 API 不提供：
 
@@ -191,4 +212,4 @@ API 不提供：
 - 交期承诺。
 - 自动邮件发送。
 - 登录权限。
-- CRM/ERP 集成。
+- CRM / ERP 集成。

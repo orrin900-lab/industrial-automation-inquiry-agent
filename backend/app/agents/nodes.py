@@ -224,13 +224,15 @@ def retrieve_knowledge(state: AgentState) -> AgentState:
                 " ".join(state.missing_information),
             ]
         )
-        state.retrieved_context = KnowledgeRetriever().retrieve(query)
+        retriever = KnowledgeRetriever()
+        state.retrieved_context = retriever.retrieve(query)
         append_trace(
             state.agent_trace,
             step_name="Knowledge Retriever",
-            mode="retrieval",
+            mode=retriever.last_mode,  # type: ignore[arg-type]
             input_summary=summarize_text(query),
             output_summary=_retrieval_summary(state.retrieved_context),
+            error_message=retriever.last_error,
             start_time=step_start,
         )
         return state

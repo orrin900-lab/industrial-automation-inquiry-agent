@@ -1,6 +1,6 @@
 # Industrial Inquiry Agent Backend
 
-FastAPI backend for the A-stage industrial inquiry agent. A1 wrapped the C+ Agent Core. A2 adds database persistence for inquiries, AgentResult, AgentRun, AgentStep, and human review logs.
+FastAPI backend for the A-stage industrial inquiry agent. It wraps the C+ Agent Core, persists inquiries and Agent results, and supports Qdrant-based RAG with keyword fallback.
 
 The backend still does not quote price, promise stock, promise lead time, or send emails automatically.
 
@@ -20,11 +20,15 @@ cd ..
 docker-compose up --build
 ```
 
-Docker Compose uses PostgreSQL by default:
+Docker Compose uses PostgreSQL and Qdrant by default:
 
 ```env
 DATABASE_URL=postgresql+psycopg2://postgres:postgres@postgres:5432/industrial_agent
 ENABLE_LLM_EXTRACTION=false
+ENABLE_QDRANT_RAG=true
+QDRANT_URL=http://qdrant:6333
+QDRANT_COLLECTION=industrial_agent_knowledge
+RAG_RETRIEVAL_MODE=qdrant
 ```
 
 The backend container exposes:
@@ -35,6 +39,26 @@ http://127.0.0.1:8000/docs
 ```
 
 Tables are created automatically at startup. The startup code retries database initialization so the backend can wait for PostgreSQL readiness.
+
+## Qdrant RAG
+
+Build or refresh the knowledge index from the root Docker Compose stack:
+
+```bash
+docker-compose exec backend python scripts/build_qdrant_index.py
+```
+
+Local development can point to host Qdrant:
+
+```env
+ENABLE_QDRANT_RAG=true
+QDRANT_URL=http://127.0.0.1:6333
+QDRANT_COLLECTION=industrial_agent_knowledge
+QDRANT_VECTOR_SIZE=384
+RAG_RETRIEVAL_MODE=qdrant
+```
+
+If Qdrant is unavailable, the backend automatically falls back to the existing keyword retriever. The `retrieved_knowledge` response structure remains unchanged.
 
 ## Database
 

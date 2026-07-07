@@ -1,12 +1,12 @@
 # Industrial Automation Inquiry Agent
 
-面向工业自动化外贸场景的询盘需求确认与转化辅助 Agent。项目用于帮助客服 / 外贸业务员处理官网询盘和邮件询盘，完成产品类别判断、需求参数抽取、知识检索、候选产品推荐、英文回复草稿生成、风险提示与人工审核记录。
+面向工业自动化外贸场景的询盘需求确认与转化辅助 Agent。项目帮助客服 / 外贸业务员处理官网询盘和邮件询盘，完成产品类别判断、需求参数抽取、知识库检索、候选产品推荐、英文回复草稿生成、风险提示与人工审核记录。
 
-当前项目已经完成 A1-A5.6 阶段：`Next.js + FastAPI + Agent Core + PostgreSQL + Docker Compose`，适合作为 GitHub 作品集、简历项目、面试讲解和 3-5 分钟录屏展示。
+当前项目已完成 A1-A6 阶段：`Next.js + FastAPI + Agent Core + PostgreSQL + Qdrant + Docker Compose`。项目适合作为 GitHub 作品集、简历项目、面试讲解和 3-5 分钟录屏展示。
 
 ## 1. 项目概览 Project Overview
 
-Industrial Automation Inquiry Agent 不是自动成交机器人，而是面向 B2B 外贸业务员的内部辅助系统。它将非结构化英文询盘转换为结构化 `AgentResult`，并保留 `Agent Trace` 与 `Retrieved Knowledge`，方便人工复核。
+Industrial Automation Inquiry Agent 不是自动成交系统，而是面向 B2B 外贸业务员的内部辅助系统。它将非结构化英文询盘转换为结构化 `AgentResult`，并保留 `Agent Trace` 与 `Retrieved Knowledge`，方便人工复核。
 
 相关文档：
 
@@ -20,14 +20,14 @@ Industrial Automation Inquiry Agent 不是自动成交机器人，而是面向 B
 
 ## 2. 业务场景 Business Scenario
 
-工业自动化外贸询盘通常信息不完整，例如：
+工业自动化外贸询盘经常信息不完整，例如：
 
 - `Need Siemens compatible PLC, 16DI and 8DO, RS485.`
 - `Looking for 2.2kW VFD for water pump, 380V three phase.`
 - `Need 7 inch HMI with Ethernet and Modbus TCP.`
 - `Looking for 8-port gigabit industrial switch, unmanaged is ok.`
 
-业务员需要快速判断：客户想买什么、缺哪些关键参数、有哪些候选产品、应该追问什么，以及回复中有哪些风险不能承诺。
+业务员需要快速判断：客户想买什么、缺哪些关键参数、有哪些候选产品、应该追问什么，以及英文回复中有哪些风险不能承诺。
 
 ## 3. 核心功能 Key Features
 
@@ -36,13 +36,14 @@ Industrial Automation Inquiry Agent 不是自动成交机器人，而是面向 B
 - 规则 fallback + 可选 LLM JSON 抽取。
 - 结构化 `AgentResult`。
 - 产品匹配 `Candidate Products`，包含 `match_score`、`match_reason`、`missing_confirmations`。
-- 轻量 RAG 检索，展示 `Retrieved Knowledge` 来源。
-- `Agent Trace` 可观测性，展示每个节点的 mode、success、latency。
+- Qdrant-based Vector Retrieval + Keyword Fallback。
+- `Retrieved Knowledge` 检索来源展示，结构兼容前端。
+- `Agent Trace` 可观测性，展示节点 mode、success、latency。
 - 风险提示 `Risk Flags`。
 - 英文回复草稿 `English Reply Draft`，必须人工审核。
 - PostgreSQL 持久化 inquiry、AgentResult、AgentRun、AgentStep、ReviewLog。
-- 中英文 UI 切换，默认中文，支持 `localStorage` 保持用户选择。
-- Docker Compose 一键启动。
+- 中文 / English UI 切换，使用 `localStorage` 保持语言选择。
+- Docker Compose 一键启动 frontend、backend、postgres、qdrant。
 
 ## 4. 系统架构 Architecture
 
@@ -52,21 +53,22 @@ flowchart TD
     F --> B["FastAPI Backend"]
     B --> S["Agent Service"]
     S --> A["Agent Core"]
-    A --> R["Lightweight RAG Retriever"]
+    A --> R["Retriever: Qdrant first, keyword fallback"]
+    R --> Q[("Qdrant")]
     A --> P["Product Repository"]
     S --> DB[("PostgreSQL")]
-    DB --> S
 ```
 
-前端负责业务员工作台展示；后端负责 API、持久化和 Agent 调用；Agent Core 负责意图识别、品类判断、需求抽取、RAG、产品匹配、回复草稿和风险检查。
+前端负责业务员工作台展示；后端负责 API、持久化和 Agent 调用；Agent Core 负责意图识别、品类判断、需求抽取、RAG、产品匹配、回复草稿和风险检查；Qdrant 负责知识库向量检索，失败时自动回退到 keyword retriever。
 
 ## 5. 技术栈 Tech Stack
 
 - Frontend: Next.js, TypeScript, Tailwind CSS, App Router
 - Backend: FastAPI, Pydantic, SQLAlchemy
 - Database: PostgreSQL, SQLite fallback
+- Vector DB: Qdrant
 - Agent Core: rule fallback, optional LLM JSON extraction
-- RAG: Markdown loader, splitter, keyword retriever
+- RAG: Markdown loader, heading splitter, hashing embedding, Qdrant retrieval, keyword fallback
 - DevOps: Docker Compose, Dockerfile, healthcheck
 - Testing: pytest, Next.js build
 
@@ -85,15 +87,7 @@ flowchart LR
     X --> O["Structured AgentResult"]
 ```
 
-每个节点都会记录 `Agent Trace`：
-
-- `step_name`
-- `mode`: rule / llm / fallback / retrieval / hybrid
-- `input_summary`
-- `output_summary`
-- `success`
-- `error_message`
-- `latency_ms`
+`Knowledge Retriever` 优先使用 Qdrant。若 Qdrant 未启动、collection 未创建或检索失败，会自动使用 keyword fallback，Agent 不会整体失败。
 
 ## 7. 数据流 Data Flow
 
@@ -103,58 +97,32 @@ sequenceDiagram
     participant UI as Next.js Frontend
     participant API as FastAPI Backend
     participant Agent as Agent Core
+    participant Q as Qdrant
     participant DB as PostgreSQL
 
     User->>UI: Submit inquiry
     UI->>API: POST /api/inquiries/analyze
     API->>DB: Save inquiry
-    API->>Agent: Run analysis
-    Agent-->>API: AgentResult + trace + retrieved knowledge
-    API->>DB: Save AgentResult, AgentRun, AgentStep
+    API->>Agent: Run workflow
+    Agent->>Q: Retrieve knowledge chunks
+    Q-->>Agent: Retrieved Knowledge
+    Agent-->>API: AgentResult + Trace
+    API->>DB: Save result and steps
     API-->>UI: inquiry_id + agent_result
-    User->>UI: Review reply draft
+    User->>UI: Human Review
     UI->>API: POST /api/inquiries/{id}/review
-    API->>DB: Save review log and status
+    API->>DB: Save review log
 ```
 
 ## 8. 截图 Screenshots
 
-以下截图均来自真实运行的 Docker Compose 环境，截图清单见 [docs/screenshots/README.md](docs/screenshots/README.md)。
-
-### 首页 Dashboard
+截图清单见 [docs/screenshots/README.md](docs/screenshots/README.md)。
 
 ![Dashboard](docs/screenshots/01_dashboard.png)
-
-### 询盘分析 Analyze Form
-
-![Analyze Form](docs/screenshots/02_analyze_form.png)
-
-### AgentResult 结构化结果
-
 ![Agent Result](docs/screenshots/03_agent_result.png)
-
-### 询盘详情 Inquiry Detail
-
 ![Inquiry Detail](docs/screenshots/05_inquiry_detail.png)
-
-### 候选产品 Candidate Products
-
-![Candidate Products](docs/screenshots/06_candidate_products.png)
-
-### 检索来源 Retrieved Knowledge
-
 ![Retrieved Knowledge](docs/screenshots/07_retrieved_knowledge.png)
-
-### Agent 执行轨迹 Agent Trace
-
 ![Agent Trace](docs/screenshots/08_agent_trace.png)
-
-### 人工审核 Human Review
-
-![Review Form](docs/screenshots/09_review_form.png)
-
-### Swagger API
-
 ![Swagger API](docs/screenshots/10_swagger_api.png)
 
 ## 9. Docker Compose 快速启动 Quick Start
@@ -170,6 +138,13 @@ Frontend: http://127.0.0.1:3001
 Backend API: http://127.0.0.1:8000
 Swagger: http://127.0.0.1:8000/docs
 PostgreSQL: localhost:5432
+Qdrant: http://127.0.0.1:6333
+```
+
+构建 Qdrant 知识库索引：
+
+```bash
+docker-compose exec backend python scripts/build_qdrant_index.py
 ```
 
 停止服务：
@@ -178,7 +153,7 @@ PostgreSQL: localhost:5432
 docker-compose down
 ```
 
-清空数据库 volume：
+清空数据库和 Qdrant volume：
 
 ```bash
 docker-compose down -v
@@ -190,7 +165,7 @@ Backend:
 
 ```bash
 cd backend
-uvicorn app.main:app --reload --port 8000
+python -m uvicorn app.main:app --reload --port 8000
 ```
 
 Frontend:
@@ -205,7 +180,7 @@ Backend tests:
 
 ```bash
 cd backend
-PYTHONPATH=. pytest
+PYTHONPATH=. python -m pytest
 ```
 
 Frontend build:
@@ -213,6 +188,12 @@ Frontend build:
 ```bash
 cd frontend
 npm run build
+```
+
+本地 Qdrant URL 可配置为：
+
+```env
+QDRANT_URL=http://127.0.0.1:6333
 ```
 
 ## 11. API 概览 API Overview
@@ -231,8 +212,8 @@ npm run build
 推荐演示流程：
 
 1. 启动 Docker Compose。
-2. 打开 `http://127.0.0.1:3001`。
-3. 查看 Dashboard 和 backend health。
+2. 执行 Qdrant index build。
+3. 打开 `http://127.0.0.1:3001`。
 4. 进入 Analyze Inquiry。
 5. 加载 PLC 或 VFD sample。
 6. 提交分析并展示 AgentResult。
@@ -240,39 +221,38 @@ npm run build
 8. 进入 Inquiry Detail。
 9. 编辑 English Reply Draft。
 10. 提交 Human Review。
-11. 查看 Inquiry List 和 PostgreSQL 持久化。
-
-详细脚本见 [docs/demo_script.md](docs/demo_script.md)。
+11. 说明 PostgreSQL 和 Qdrant 持久化。
 
 ## 13. 原型边界 Prototype Boundary
 
 当前项目是工程化原型，不是生产销售自动化系统。
 
 - 当前产品数据为高仿真模拟数据。
-- 当前轻量 RAG 不是最终生产级向量数据库。
+- 当前 hashing embedding 是 prototype lightweight embedding，不代表最终生产语义 embedding。
+- 当前 Qdrant RAG 已具备工程接口，但可继续升级为 OpenAI embeddings 或 sentence-transformers。
 - 系统不自动报价。
 - 系统不承诺库存。
 - 系统不承诺交期。
 - 系统不自动发送邮件。
 - 英文回复草稿必须由业务员人工审核。
-- 登录权限、CRM、ERP、邮件系统、Qdrant、Redis、报价系统尚未接入。
+- 登录权限、CRM、ERP、邮件系统、Redis、报价系统尚未接入。
 - 当前评估不代表真实生产准确率。
 
 ## 14. 路线图 Roadmap
 
-- A6: 使用 Qdrant 替换当前轻量关键词 RAG。
-- 增加 Alembic 数据库迁移。
-- 增加 Redis 异步任务队列。
-- 增加登录权限与角色控制。
-- 增加 CRM/ERP/邮件系统集成。
-- 增加带人工审批闸口的报价准备流程。
-- 增加生产级日志、指标、链路追踪和审计事件。
+- 知识库管理后台 Knowledge Base Admin。
+- 生产级 embedding：OpenAI embeddings 或 sentence-transformers。
+- Alembic 数据库迁移。
+- Redis 异步任务队列。
+- 登录权限与角色控制。
+- CRM / ERP / 邮件系统集成。
+- 带人工审批接口的报价准备流程。
 
 ## 15. 简历亮点 Resume Highlights
 
 - 构建面向 B2B 工业自动化外贸询盘的 full-stack AI Agent 应用。
-- 设计结构化 Agent workflow：fallback extraction、lightweight RAG、product matching、risk checking、Agent Trace。
-- 实现 FastAPI API、PostgreSQL 持久化、Next.js 前端后台和 Docker Compose 部署。
-- 采用 Human-in-the-loop 设计，避免自动报价、库存承诺、交期承诺和自动邮件发送等风险。
+- 设计结构化 Agent workflow：fallback extraction、Qdrant RAG、product matching、risk checking、Agent Trace。
+- 实现 FastAPI API、PostgreSQL 持久化、Next.js 前端后台、Qdrant 向量检索和 Docker Compose 部署。
+- 采用 Human-in-the-loop 设计，避免自动报价、库存承诺、交期承诺和自动邮件发送等高风险行为。
 
 英文简历 bullet points 保留在 [docs/resume_description.md](docs/resume_description.md)。

@@ -23,6 +23,22 @@ class LLMConfig(BaseModel):
         )
 
 
+class RAGConfig(BaseModel):
+    enable_qdrant_rag: bool = False
+    qdrant_url: str = "http://127.0.0.1:6333"
+    qdrant_collection: str = "industrial_agent_knowledge"
+    qdrant_vector_size: int = 384
+    qdrant_timeout_seconds: float = 3.0
+    rag_retrieval_mode: str = "keyword"
+
+    @property
+    def use_qdrant(self) -> bool:
+        return (
+            self.enable_qdrant_rag
+            and self.rag_retrieval_mode.strip().lower() == "qdrant"
+        )
+
+
 class AppConfig(BaseModel):
     project_root: Path
     data_dir: Path
@@ -34,6 +50,7 @@ class AppConfig(BaseModel):
     storage_dir: Path
     database_url: str
     llm: LLMConfig
+    rag: RAGConfig
 
 
 @lru_cache(maxsize=1)
@@ -61,6 +78,16 @@ def get_config() -> AppConfig:
             ).rstrip("/"),
             enable_llm_extraction=_to_bool(os.getenv("ENABLE_LLM_EXTRACTION", "false")),
             request_timeout_seconds=int(os.getenv("LLM_REQUEST_TIMEOUT_SECONDS", "30")),
+        ),
+        rag=RAGConfig(
+            enable_qdrant_rag=_to_bool(os.getenv("ENABLE_QDRANT_RAG", "false")),
+            qdrant_url=os.getenv("QDRANT_URL", "http://127.0.0.1:6333").rstrip("/"),
+            qdrant_collection=os.getenv(
+                "QDRANT_COLLECTION", "industrial_agent_knowledge"
+            ),
+            qdrant_vector_size=int(os.getenv("QDRANT_VECTOR_SIZE", "384")),
+            qdrant_timeout_seconds=float(os.getenv("QDRANT_TIMEOUT_SECONDS", "3")),
+            rag_retrieval_mode=os.getenv("RAG_RETRIEVAL_MODE", "keyword"),
         ),
     )
 
