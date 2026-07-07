@@ -18,6 +18,9 @@ Industrial Automation Inquiry Agent 不是自动成交系统，而是面向 B2B 
 - [项目总结 Project Summary](docs/project_summary.md)
 - [人工复测报告 Manual Test Report](docs/manual_test_report.md)
 - [Qdrant RAG 总结 Qdrant RAG Summary](docs/qdrant_rag_summary.md)
+- [GitHub 发布指南 GitHub Publish Guide](docs/github_publish_guide.md)
+- [录屏演示脚本 Demo Video Script](docs/demo_video_script.md)
+- [求职展示材料 Job Ready Package](docs/job_ready_package.md)
 
 ## 2. 业务场景 Business Scenario
 
