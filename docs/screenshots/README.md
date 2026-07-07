@@ -24,7 +24,14 @@
 industrial-agent-postgres healthy
 industrial-agent-backend healthy
 industrial-agent-frontend healthy
+industrial-agent-qdrant running
 ```
+
+## A6 Qdrant RAG 说明
+
+A6 之后，Agent Trace 中可展示 `Knowledge Retriever=qdrant`，Retrieved Knowledge 仍保持原有展示结构。
+
+现有截图主要用于展示核心页面结构。A6 后 Qdrant 检索能力主要通过 Agent Trace、`docs/qdrant_rag_summary.md`、`docs/manual_test_report.md` 和测试结果体现；不要伪造新的 A6 截图，也不要引用不存在的图片。
 
 ## 截图流程
 

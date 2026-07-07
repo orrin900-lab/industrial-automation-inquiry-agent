@@ -11,7 +11,7 @@
 | Swagger | `http://127.0.0.1:8000/docs` |
 | Database | PostgreSQL in Docker Compose |
 | Vector DB | Qdrant in Docker Compose |
-| Git branch | `feature/qdrant-rag` |
+| Git branch | A6 validation on `feature/qdrant-rag`; stable merge target `master` |
 
 ## 2. P0 测试结果
 
@@ -46,19 +46,21 @@
 
 ## 4. A6 Qdrant RAG 验证结果
 
-| Test Case | Result | Notes |
-| --- | --- | --- |
-| Docker Compose config | PASS | `docker-compose config --quiet` 通过。 |
-| Docker Compose startup | PASS | postgres、backend、frontend healthy，qdrant running。 |
-| Qdrant API | PASS | `http://127.0.0.1:6333` 返回 200。 |
-| Qdrant collection | PASS | `industrial_agent_knowledge` 创建成功。 |
-| Qdrant chunks | PASS | `chunks_loaded=21`，`chunks_upserted=21`，`points_count=21`。 |
-| Analyze API | PASS | PLC sample 返回 `product_category=PLC`。 |
-| Retrieval mode | PASS | Agent Trace 中 `Knowledge Retriever=qdrant`。 |
-| Retrieved Knowledge | PASS | 返回 4 条知识来源，结构保持 `content/score/metadata`。 |
-| Inquiry list/detail | PASS | `/api/inquiries` 和 `/api/inquiries/12` 正常。 |
-| Review API | PASS | `/api/inquiries/12/review` 返回 success。 |
-| Qdrant fallback unit test | PASS | Qdrant 不可用时 fallback 到 keyword retriever。 |
+| Priority | Test Case | Result | Notes |
+| --- | --- | --- | --- |
+| A6 | Docker Compose includes Qdrant | PASS | `docker-compose config` 显示 `qdrant` 服务和 `qdrant_data` volume。 |
+| A6 | Qdrant endpoint reachable | PASS | `http://127.0.0.1:6333` 返回 200。 |
+| A6 | Qdrant collection created | PASS | collection 为 `industrial_agent_knowledge`，状态 `green`。 |
+| A6 | Knowledge chunks indexed | PASS | `chunks_loaded=21`，`chunks_upserted=21`，`points_count=21`。 |
+| A6 | Stable upsert | PASS | 重复执行 index build 后 `points_count` 仍为 `21`，没有重复堆叠。 |
+| A6 | Qdrant retrieval works | PASS | PLC sample 分析成功，Retrieved Knowledge 返回 4 条。 |
+| A6 | Agent Trace shows qdrant mode | PASS | Knowledge Retriever 节点显示 `mode=qdrant`。 |
+| A6 | Retrieved Knowledge compatible structure | PASS | 保持 `content`、`score`、`metadata.source_file/section_title/document_type/chunk_id`。 |
+| A6 | Keyword fallback works | PASS | `test_qdrant_fallback.py` 覆盖 Qdrant 不可用时 fallback。 |
+| A6 | Backend pytest | PASS | A6.5 回归结果：`14 passed`。 |
+| A6 | Frontend build | PASS | `npm run build` 成功。 |
+| A6 | Analyze workflow | PASS | `/api/inquiries/analyze` 返回 `product_category=PLC`，`retriever_mode=qdrant`。 |
+| A6 | Review workflow | PASS | `/api/inquiries/{id}/review` 返回 success。 |
 
 ## 5. P2 可选测试项
 
