@@ -97,3 +97,15 @@ A7.5 完成 Knowledge Base Admin 浏览器复测、截图和稳定验证：
 - `points_count` 重建后保持为 `21`，说明 upsert 稳定。
 
 该阶段仍保持 portfolio / prototype 边界，不进入知识库上传、编辑、删除或权限系统。
+
+## 10. 最终求职材料整理 Career Package
+
+方案 A 已完成最终求职材料整理，新增目录 `docs/career_package/`：
+
+- `resume_project_final.md`: 最终简历项目描述，包含中文 / 英文、简短版、标准版、详细版和 bullet points。
+- `interview_pitch.md`: 30 秒、1 分钟、3 分钟、5 分钟面试讲解稿。
+- `technical_qa.md`: 面试技术追问 Q&A，覆盖 Agent Workflow、RAG、Qdrant、fallback、Human Review、Docker Compose 等问题。
+- `project_challenges.md`: 项目难点与解决方案。
+- `job_application_notes.md`: 投递岗位、简历写法、面试边界和后续补强建议。
+
+这些材料用于 GitHub 作品集、简历投递、面试讲解和技术追问准备。所有材料继续明确：项目使用高仿真模拟数据，是 portfolio / prototype 工程化项目，不自动报价、不承诺库存、不承诺交期、不自动发送邮件。

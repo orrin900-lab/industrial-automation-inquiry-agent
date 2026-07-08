@@ -21,6 +21,11 @@ Industrial Automation Inquiry Agent 不是自动成交系统，而是面向 B2B 
 - [GitHub 发布指南 GitHub Publish Guide](docs/github_publish_guide.md)
 - [录屏演示脚本 Demo Video Script](docs/demo_video_script.md)
 - [求职展示材料 Job Ready Package](docs/job_ready_package.md)
+- [求职材料包 Career Package](docs/career_package/resume_project_final.md)
+  - [面试讲解稿 Interview Pitch](docs/career_package/interview_pitch.md)
+  - [技术追问 Q&A](docs/career_package/technical_qa.md)
+  - [项目难点与解决方案 Project Challenges](docs/career_package/project_challenges.md)
+  - [投递包装说明 Job Application Notes](docs/career_package/job_application_notes.md)
 
 ## 2. 业务场景 Business Scenario
 
