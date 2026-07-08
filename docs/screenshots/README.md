@@ -42,3 +42,12 @@ A6 之后，Agent Trace 中可展示 `Knowledge Retriever=qdrant`，Retrieved Kn
 5. 提交分析并截取 AgentResult。
 6. 进入详情页，截取 Candidate Products、Retrieved Knowledge、Agent Trace、Review Form。
 7. 打开 `http://127.0.0.1:8000/docs` 截取 Swagger。
+
+## A7 Knowledge Base Admin 截图
+
+| File | Status | 展示内容 |
+| --- | --- | --- |
+| `12_knowledge_base_admin.png` | captured | `/knowledge` 页面状态总览，展示 Qdrant status、points_count、embedding provider、fallback 和 chunks 列表。 |
+| `13_knowledge_reindex_success.png` | captured | 手动 `Rebuild Qdrant Index` 成功后的页面状态，展示 rebuild success 与 chunks 筛选后的知识分片。 |
+
+这些截图来自真实本地页面 `http://127.0.0.1:3001/knowledge`，用于展示 Qdrant RAG 轻量运维后台。当前页面不支持上传、编辑或删除知识文档。

@@ -119,3 +119,24 @@ Knowledge Base Admin: add a lightweight backend/frontend flow for viewing knowle
 | A7 | Review workflow | PASS | Review API 返回 `success`，状态为 `need_clarification`。 |
 
 A7 当前只做轻量知识库运维：查看状态、查看 chunks、手动 rebuild index。未做上传、编辑、删除、登录权限、Redis、邮件系统、CRM/ERP 或报价系统。
+
+## 10. A7.5 Knowledge Base Admin Browser Retest
+
+| Priority | Test Case | Result | Notes |
+| --- | --- | --- | --- |
+| A7.5 | `/knowledge` 页面 | PASS | 浏览器访问 `http://127.0.0.1:3001/knowledge` 成功。 |
+| A7.5 | Knowledge Status | PASS | 显示 `RAG Mode=qdrant`、`Collection=industrial_agent_knowledge`、`Vector Size=384`。 |
+| A7.5 | Qdrant Available | PASS | 页面和 API 均显示 Qdrant available。 |
+| A7.5 | points_count | PASS | `points_count=21`，重建后仍为 21。 |
+| A7.5 | chunks list | PASS | chunks total 为 21，列表可展示 chunk_id、source_file、section_title、document_type、content_preview。 |
+| A7.5 | source_file filter | PASS | 浏览器中按 `faq.md` 筛选成功。 |
+| A7.5 | pagination / limit-offset | PASS | 全部来源下 Next 按钮可点击，页面内容变化；API 支持 `limit` / `offset`。 |
+| A7.5 | Rebuild Index | PASS | 浏览器点击 `Rebuild Qdrant Index` 后显示 `Qdrant index rebuilt successfully.` |
+| A7.5 | i18n | PASS | 中文默认展示正常，可切换到 English。 |
+| A7.5 | Screenshots | PASS | 新增 `12_knowledge_base_admin.png` 和 `13_knowledge_reindex_success.png`。 |
+| A7.5 | `/analyze` regression | PASS | 浏览器提交 sample inquiry 后 AgentResult、Retrieved Knowledge、Agent Trace 正常展示。 |
+| A7.5 | Review regression | PASS | 浏览器详情页提交 review 成功，状态为 `need_clarification`。 |
+| A7.5 | Browser console | PASS | `/knowledge`、`/analyze`、review 回归流程 console error count = 0。 |
+| A7.5 | Docker Compose | PASS | postgres/backend/frontend healthy，qdrant running。 |
+
+A7.5 继续保持边界：不做知识库上传、在线编辑、删除 chunk、登录权限、Redis、邮件系统、CRM/ERP 或报价系统；不自动报价、不承诺库存、不承诺交期、不自动发送邮件，英文回复草稿必须人工审核。

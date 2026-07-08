@@ -184,3 +184,20 @@ A6 已经把轻量 keyword RAG 升级为 Qdrant-based Vector Retrieval + Keyword
 **面试时怎么讲亮点？**
 
 可以强调：这个项目不是只把 RAG 写在后端，而是补了运维可观测性。业务员或开发者可以在 UI 中看到 Qdrant 是否可用、当前 collection 中有多少 points、哪些 Markdown source 已被索引，并可以手动 rebuild。Qdrant 不可用时，Agent 仍能 keyword fallback，避免分析链路整体失败。
+
+## A7.5 面试补充：如何展示 Knowledge Base Admin
+
+演示时可以这样讲：
+
+1. 打开 `/knowledge`，说明这是 Qdrant RAG 的轻量运维后台。
+2. 展示 `RAG Mode=qdrant`、`Qdrant Available=true`、`Collection=industrial_agent_knowledge`、`Points Count=21`。
+3. 展示 chunks 列表，说明 chunk payload 保留 `source_file`、`section_title`、`document_type` 和 `content_preview`。
+4. 使用 `source_file` 筛选，说明可以定位 FAQ、selection rules 或 email templates 的知识来源。
+5. 点击 `Rebuild Qdrant Index`，说明它会重新读取 Markdown、切分 chunks、生成 deterministic hashing embedding 并 upsert 到 Qdrant。
+6. 强调当前不支持上传、编辑、删除，因为这是 portfolio prototype 的轻量运维页，不是完整 CMS。
+
+一句话总结：
+
+```text
+A7.5 证明这个项目不仅能跑 Agent，还具备 RAG 状态可观测、索引重建和人工审核闭环，适合用于面试展示工程完整性。
+```

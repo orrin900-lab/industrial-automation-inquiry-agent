@@ -118,3 +118,22 @@ Retriever 会 fallback 到 keyword retriever，Agent 不会整体失败。测试
 - Bilingual UI
 - Industrial Automation
 - Export Sales
+
+## 12. A7 Knowledge Base Admin 求职亮点
+
+A7 在 Qdrant RAG 基础上补齐了轻量知识库运维后台，可作为面试中的工程完整性亮点：
+
+- 新增 `/knowledge` 页面，用于查看 Qdrant collection 状态、points_count、vector_size、embedding provider 和 keyword fallback。
+- 新增 `GET /api/knowledge/status`、`GET /api/knowledge/chunks`、`POST /api/knowledge/reindex`。
+- 支持查看 chunks 列表、按 `source_file` 筛选，并手动 `Rebuild Qdrant Index`。
+- 浏览器复测确认 `/knowledge`、`/analyze` 和 review 流程均可用，console error count = 0。
+
+面试表达建议：
+
+```text
+我没有把 RAG 做成后端黑盒，而是补了一个轻量 Knowledge Base Admin。
+它可以查看 Qdrant 是否可用、collection 中有多少 points、当前 embedding 方案是什么，
+也可以手动 rebuild index。这个页面不做上传、编辑或删除，主要用于 prototype 的可观测性和运维展示。
+```
+
+边界说明：A7 不是完整知识库管理系统，暂不支持知识文件上传、在线编辑、删除、权限控制或异步任务队列。

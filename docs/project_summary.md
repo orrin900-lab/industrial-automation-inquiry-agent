@@ -85,3 +85,15 @@ A7 增加了轻量 Knowledge Base Admin，用于作品集原型中的 Qdrant RAG
 - 可以手动 rebuild Qdrant index，复用现有 Markdown loader、splitter、hashing embedding 和 upsert 逻辑。
 
 当前 A7 仍是轻量运维后台，不支持知识库上传、在线编辑、删除 chunk、登录权限、Redis 异步任务、邮件系统、CRM/ERP 或报价系统。系统仍然不自动报价、不承诺库存、不承诺交期、不自动发送邮件，英文回复草稿必须由业务员人工审核。
+
+## 9. A7.5 稳定收口
+
+A7.5 完成 Knowledge Base Admin 浏览器复测、截图和稳定验证：
+
+- 新增真实截图 `docs/screenshots/12_knowledge_base_admin.png`。
+- 新增真实截图 `docs/screenshots/13_knowledge_reindex_success.png`。
+- 浏览器验证 `/knowledge` 页面、中文 / English 切换、source_file 筛选、分页、Rebuild Qdrant Index。
+- 回归验证 `/analyze`、Retrieved Knowledge、Agent Trace 和 Human Review。
+- `points_count` 重建后保持为 `21`，说明 upsert 稳定。
+
+该阶段仍保持 portfolio / prototype 边界，不进入知识库上传、编辑、删除或权限系统。

@@ -129,6 +129,8 @@ sequenceDiagram
 ![Retrieved Knowledge](docs/screenshots/07_retrieved_knowledge.png)
 ![Agent Trace](docs/screenshots/08_agent_trace.png)
 ![Swagger API](docs/screenshots/10_swagger_api.png)
+![Knowledge Base Admin](docs/screenshots/12_knowledge_base_admin.png)
+![Knowledge Reindex Success](docs/screenshots/13_knowledge_reindex_success.png)
 
 ## 9. Docker Compose 快速启动 Quick Start
 
