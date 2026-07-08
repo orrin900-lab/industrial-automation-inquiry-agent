@@ -204,3 +204,16 @@ A6.5 回归验证结果：
 - 增加知识库版本、索引状态、索引任务日志。
 - 用 Redis / background jobs 管理耗时索引构建。
 - 增加更完整的检索评估集和 recall / precision 指标。
+
+## 14. A7 Knowledge Base Admin 补充
+
+A7 在 A6 Qdrant RAG 基础上增加轻量 Knowledge Base Admin：
+
+- 前端页面：`/knowledge`
+- 状态 API：`GET /api/knowledge/status`
+- chunks API：`GET /api/knowledge/chunks`
+- 重建索引 API：`POST /api/knowledge/reindex`
+
+页面可展示 Qdrant 是否可访问、当前 RAG mode、collection 名称、points_count、vector_size、embedding provider、keyword fallback 是否可用，以及 Qdrant payload 中的 chunks 列表。手动 rebuild index 会重新读取 `backend/data` 下的 Markdown 文件，重新切分 chunks 并 upsert 到 Qdrant。
+
+当前 A7 不做知识库上传、在线编辑、删除 chunk 或异步任务队列。它主要用于面试和演示中说明 RAG 运维闭环：不仅能检索，还能查看索引状态和手动重建索引。

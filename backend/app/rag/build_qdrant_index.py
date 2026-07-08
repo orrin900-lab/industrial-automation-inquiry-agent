@@ -15,6 +15,7 @@ class QdrantIndexBuildResult:
     chunks_loaded: int
     chunks_upserted: int
     qdrant_url: str
+    points_count: int
 
 
 def build_qdrant_index(config: AppConfig | None = None) -> QdrantIndexBuildResult:
@@ -37,9 +38,11 @@ def build_qdrant_index(config: AppConfig | None = None) -> QdrantIndexBuildResul
         timeout_seconds=resolved_config.rag.qdrant_timeout_seconds,
     )
     upserted = store.upsert_chunks(chunks)
+    points_count = store.get_points_count()
     return QdrantIndexBuildResult(
         collection_name=resolved_config.rag.qdrant_collection,
         chunks_loaded=len(chunks),
         chunks_upserted=upserted,
         qdrant_url=resolved_config.rag.qdrant_url,
+        points_count=points_count,
     )

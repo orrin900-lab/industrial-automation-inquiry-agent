@@ -136,3 +136,25 @@ docker-compose exec backend python scripts/build_qdrant_index.py
 - 更细粒度 chunking。
 - 知识库管理后台。
 - 索引增量更新。
+
+## 8. A7 Knowledge Base Admin 架构补充
+
+A7 在不改动 Agent Core 和数据库主模型的前提下，新增轻量知识库运维后台：
+
+```mermaid
+flowchart TD
+    U["Sales User / Operator"] --> F["Next.js /knowledge Page"]
+    F --> API["FastAPI Knowledge API"]
+    API --> KS["Knowledge Service"]
+    KS --> Q[("Qdrant Collection")]
+    KS --> MD["Markdown Knowledge Files"]
+    KS --> FB["Keyword Fallback Status"]
+```
+
+新增 API：
+
+- `GET /api/knowledge/status`: 查看 RAG mode、Qdrant availability、collection、points_count、embedding provider 和 keyword fallback。
+- `GET /api/knowledge/chunks`: 从 Qdrant scroll payload 读取 chunks，支持 `source_file`、`limit`、`offset`。
+- `POST /api/knowledge/reindex`: 复用 Markdown loader、splitter、hashing embedding 和 Qdrant upsert 逻辑重建索引。
+
+该页面只用于轻量运维展示，不支持上传、编辑、删除知识文档，也不引入登录、Redis、邮件、CRM/ERP 或报价系统。

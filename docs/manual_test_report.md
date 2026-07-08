@@ -100,3 +100,22 @@ Knowledge Base Admin: add a lightweight backend/frontend flow for viewing knowle
 ```
 
 也可以先做最终简历 / 面试材料整理，将 A6 Qdrant 能力纳入 resume bullets 和 demo script。
+
+## 9. A7 Knowledge Base Admin 验证结果
+
+| Priority | Test Case | Result | Notes |
+| --- | --- | --- | --- |
+| A7 | Branch created | PASS | 当前开发分支为 `feature/knowledge-base-admin`。 |
+| A7 | Backend Knowledge API registered | PASS | 新增 `/api/knowledge/status`、`/api/knowledge/chunks`、`/api/knowledge/reindex`。 |
+| A7 | Qdrant status API | PASS | `rag_mode=qdrant`，`qdrant_available=true`，`points_count=21`。 |
+| A7 | Chunks API | PASS | `GET /api/knowledge/chunks?limit=3&offset=0` 返回 `total=21` 和 Qdrant payload items。 |
+| A7 | Reindex API | PASS | `POST /api/knowledge/reindex` 返回 `success=true`，`indexed_chunks=21`，`points_count=21`。 |
+| A7 | `/knowledge` frontend page | PASS | `http://127.0.0.1:3001/knowledge` 返回 200。 |
+| A7 | Chinese / English i18n | PASS | `/knowledge` 已接入现有轻量 i18n 字典和 AppShell 导航。 |
+| A7 | Backend pytest | PASS | A7 后 `18 passed`。 |
+| A7 | Frontend build | PASS | `npm run build` 成功，包含 `/knowledge` route。 |
+| A7 | Docker Compose | PASS | postgres/backend/frontend healthy，qdrant running。 |
+| A7 | Analyze workflow | PASS | PLC sample API 分析成功，`product_category=PLC`，Retrieved Knowledge 返回 4 条，Agent Trace 包含 `qdrant`。 |
+| A7 | Review workflow | PASS | Review API 返回 `success`，状态为 `need_clarification`。 |
+
+A7 当前只做轻量知识库运维：查看状态、查看 chunks、手动 rebuild index。未做上传、编辑、删除、登录权限、Redis、邮件系统、CRM/ERP 或报价系统。

@@ -22,6 +22,7 @@ def main() -> None:
                 "collection_name": result.collection_name,
                 "chunks_loaded": result.chunks_loaded,
                 "chunks_upserted": result.chunks_upserted,
+                "points_count": result.points_count,
             },
             ensure_ascii=False,
             indent=2,

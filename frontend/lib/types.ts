@@ -152,3 +152,47 @@ export interface InquiryListParams {
   limit?: number;
   offset?: number;
 }
+
+export interface KnowledgeStatus {
+  rag_mode: string;
+  qdrant_enabled: boolean;
+  qdrant_available: boolean;
+  collection_name: string;
+  points_count?: number | null;
+  vector_size: number;
+  indexed_chunks: number;
+  source_files: string[];
+  fallback_available: boolean;
+  embedding_provider: string;
+  last_checked_at: string;
+  error_message?: string | null;
+}
+
+export interface KnowledgeChunkItem {
+  chunk_id: string;
+  source_file: string;
+  section_title: string;
+  document_type: string;
+  content_preview: string;
+  content?: string | null;
+  score?: number | null;
+}
+
+export interface KnowledgeChunksResponse {
+  status: string;
+  items: KnowledgeChunkItem[];
+  total: number;
+  limit: number;
+  offset: number;
+  source_file?: string | null;
+  error_message?: string | null;
+}
+
+export interface KnowledgeReindexResponse {
+  success: boolean;
+  collection_name: string;
+  indexed_chunks: number;
+  points_count?: number | null;
+  message: string;
+  error_message?: string | null;
+}

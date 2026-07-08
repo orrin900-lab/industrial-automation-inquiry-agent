@@ -8,7 +8,8 @@ import { useI18n } from "@/lib/i18n";
 const navItems = [
   { href: "/", labelKey: "nav.dashboard" },
   { href: "/analyze", labelKey: "nav.analyze" },
-  { href: "/inquiries", labelKey: "nav.inquiries" }
+  { href: "/inquiries", labelKey: "nav.inquiries" },
+  { href: "/knowledge", labelKey: "nav.knowledge" }
 ] as const;
 
 export function AppShell({ children }: { children: React.ReactNode }) {

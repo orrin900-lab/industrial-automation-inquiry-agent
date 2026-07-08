@@ -2,7 +2,7 @@
 
 面向工业自动化外贸场景的询盘需求确认与转化辅助 Agent。项目帮助客服 / 外贸业务员处理官网询盘和邮件询盘，完成产品类别判断、需求参数抽取、知识库检索、候选产品推荐、英文回复草稿生成、风险提示与人工审核记录。
 
-当前项目已完成 A1-A6 阶段：`Next.js + FastAPI + Agent Core + PostgreSQL + Qdrant + Docker Compose`。项目适合作为 GitHub 作品集、简历项目、面试讲解和 3-5 分钟录屏展示。
+当前项目已完成 A1-A7 阶段：`Next.js + FastAPI + Agent Core + PostgreSQL + Qdrant + Docker Compose + Knowledge Base Admin`。项目适合作为 GitHub 作品集、简历项目、面试讲解和 3-5 分钟录屏展示。
 
 ## 1. 项目概览 Project Overview
 
@@ -47,6 +47,7 @@ Industrial Automation Inquiry Agent 不是自动成交系统，而是面向 B2B 
 - 英文回复草稿 `English Reply Draft`，必须人工审核。
 - PostgreSQL 持久化 inquiry、AgentResult、AgentRun、AgentStep、ReviewLog。
 - 中文 / English UI 切换，使用 `localStorage` 保持语言选择。
+- 轻量知识库运维后台 `Knowledge Base Admin`：查看 Qdrant 状态、chunks 列表并手动重建索引。
 - Docker Compose 一键启动 frontend、backend、postgres、qdrant。
 
 ## 4. 系统架构 Architecture
@@ -208,6 +209,9 @@ QDRANT_URL=http://127.0.0.1:6333
 - `GET /api/inquiries/{id}`
 - `POST /api/inquiries/{id}/review`
 - `GET /api/inquiries/samples`
+- `GET /api/knowledge/status`
+- `GET /api/knowledge/chunks`
+- `POST /api/knowledge/reindex`
 
 详细说明见 [docs/api_overview.md](docs/api_overview.md)。
 
@@ -222,10 +226,11 @@ QDRANT_URL=http://127.0.0.1:6333
 5. 加载 PLC 或 VFD sample。
 6. 提交分析并展示 AgentResult。
 7. 展示 Candidate Products、Missing Information、Retrieved Knowledge、Agent Trace。
-8. 进入 Inquiry Detail。
-9. 编辑 English Reply Draft。
-10. 提交 Human Review。
-11. 说明 PostgreSQL 和 Qdrant 持久化。
+8. 进入 Knowledge Base 页面，查看 Qdrant status、chunks 和手动 rebuild index。
+9. 进入 Inquiry Detail。
+10. 编辑 English Reply Draft。
+11. 提交 Human Review。
+12. 说明 PostgreSQL 和 Qdrant 持久化。
 
 ## 13. 原型边界 Prototype Boundary
 
@@ -234,6 +239,7 @@ QDRANT_URL=http://127.0.0.1:6333
 - 当前产品数据为高仿真模拟数据。
 - 当前 hashing embedding 是 prototype lightweight embedding，不代表最终生产语义 embedding。
 - 当前 Qdrant RAG 已具备工程接口，但可继续升级为 OpenAI embeddings 或 sentence-transformers。
+- 当前 Knowledge Base Admin 只支持查看状态、查看 chunks 和手动重建索引，不支持上传、编辑或删除知识文档。
 - 系统不自动报价。
 - 系统不承诺库存。
 - 系统不承诺交期。
@@ -244,7 +250,7 @@ QDRANT_URL=http://127.0.0.1:6333
 
 ## 14. 路线图 Roadmap
 
-- 知识库管理后台 Knowledge Base Admin。
+- A7.5 可继续增强 Knowledge Base Admin，例如查看 collection diagnostics 和更细粒度 rebuild 日志。
 - 生产级 embedding：OpenAI embeddings 或 sentence-transformers。
 - Alembic 数据库迁移。
 - Redis 异步任务队列。

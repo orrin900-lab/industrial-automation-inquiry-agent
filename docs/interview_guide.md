@@ -162,3 +162,25 @@ A6 后，Knowledge Retriever 节点可以显示：
 5. 可降级：LLM fallback 和 Qdrant keyword fallback。
 6. 风险控制：Human-in-the-loop，不自动报价、不自动发邮件。
 7. 可演进：embedding、知识库后台、权限、CRM/ERP、邮件系统都能继续扩展。
+
+## A7 面试讲解：Knowledge Base Admin
+
+**为什么要做 Knowledge Base Admin？**
+
+A6 已经把轻量 keyword RAG 升级为 Qdrant-based Vector Retrieval + Keyword Fallback，但面试或演示时还需要让评审看到知识库不是黑盒。因此 A7 增加了轻量运维后台，用来查看 collection 状态、points_count、chunks 列表和手动 rebuild index。
+
+**A7 做了什么？**
+
+- 前端新增 `/knowledge` 页面。
+- 后端新增 `GET /api/knowledge/status`、`GET /api/knowledge/chunks`、`POST /api/knowledge/reindex`。
+- 支持查看 Qdrant availability、RAG mode、embedding provider、keyword fallback 和 source files。
+- 支持从 Qdrant scroll payload 查看 chunks。
+- 支持同步 rebuild Qdrant index。
+
+**A7 没做什么？**
+
+当前不是完整知识库管理系统，不支持上传、在线编辑、删除 chunk、登录权限、Redis 异步任务、邮件系统、CRM/ERP 或报价系统。这样控制范围可以保持项目作为 portfolio / prototype 的清晰边界。
+
+**面试时怎么讲亮点？**
+
+可以强调：这个项目不是只把 RAG 写在后端，而是补了运维可观测性。业务员或开发者可以在 UI 中看到 Qdrant 是否可用、当前 collection 中有多少 points、哪些 Markdown source 已被索引，并可以手动 rebuild。Qdrant 不可用时，Agent 仍能 keyword fallback，避免分析链路整体失败。

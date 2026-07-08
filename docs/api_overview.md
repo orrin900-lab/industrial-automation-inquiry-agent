@@ -213,3 +213,60 @@ API 不提供：
 - 自动邮件发送。
 - 登录权限。
 - CRM / ERP 集成。
+
+## A7 Knowledge Base Admin API
+
+### GET `/api/knowledge/status`
+
+功能：查看当前 Qdrant RAG 知识库状态。
+
+是否写数据库：否。
+
+是否触发 Agent：否。
+
+是否需要人工审核：否。
+
+响应示例：
+
+```json
+{
+  "rag_mode": "qdrant",
+  "qdrant_enabled": true,
+  "qdrant_available": true,
+  "collection_name": "industrial_agent_knowledge",
+  "points_count": 21,
+  "vector_size": 384,
+  "indexed_chunks": 21,
+  "source_files": ["faq.md", "selection_rules.md", "email_templates.md"],
+  "fallback_available": true,
+  "embedding_provider": "deterministic_hashing"
+}
+```
+
+### GET `/api/knowledge/chunks`
+
+功能：查看 Qdrant collection 中的知识分片 payload。支持 `limit`、`offset`、`source_file`。
+
+请求示例：
+
+```text
+GET /api/knowledge/chunks?limit=20&offset=0&source_file=faq.md
+```
+
+是否写数据库：否。
+
+是否触发 Agent：否。
+
+是否需要人工审核：否。
+
+### POST `/api/knowledge/reindex`
+
+功能：从 `backend/data` 下的 Markdown 文件重新构建 Qdrant index。
+
+是否写数据库：否。
+
+是否触发 Agent：否。
+
+是否需要人工审核：否。
+
+边界：当前接口不上传、不编辑、不删除知识文档；只做同步 rebuild index。

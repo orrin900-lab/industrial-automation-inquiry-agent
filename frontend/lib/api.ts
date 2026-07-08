@@ -4,6 +4,9 @@ import type {
   InquiryInput,
   InquiryListItem,
   InquiryListParams,
+  KnowledgeChunksResponse,
+  KnowledgeStatus,
+  KnowledgeReindexResponse,
   ReviewPayload,
   SampleInquiry
 } from "@/lib/types";
@@ -118,5 +121,28 @@ export function submitReview(
   return requestJson<ReviewResponse>(`/api/inquiries/${id}/review`, {
     method: "POST",
     body: JSON.stringify(payload)
+  });
+}
+
+export function getKnowledgeStatus(): Promise<KnowledgeStatus> {
+  return requestJson<KnowledgeStatus>("/api/knowledge/status");
+}
+
+export function getKnowledgeChunks(params?: {
+  limit?: number;
+  offset?: number;
+  source_file?: string;
+}): Promise<KnowledgeChunksResponse> {
+  return requestJson<KnowledgeChunksResponse>("/api/knowledge/chunks", undefined, {
+    limit: params?.limit,
+    offset: params?.offset,
+    source_file: params?.source_file
+  });
+}
+
+export function rebuildKnowledgeIndex(): Promise<KnowledgeReindexResponse> {
+  return requestJson<KnowledgeReindexResponse>("/api/knowledge/reindex", {
+    method: "POST",
+    body: JSON.stringify({})
   });
 }

@@ -86,6 +86,70 @@ class QdrantStore:
         )
         return len(points)
 
+    def get_collection_info(self) -> dict[str, Any] | None:
+        return self._get_collection()
+
+    def get_points_count(self, source_file: str | None = None) -> int:
+        self.ensure_collection()
+        payload: dict[str, Any] = {"exact": True}
+        qdrant_filter = _source_file_filter(source_file)
+        if qdrant_filter:
+            payload["filter"] = qdrant_filter
+        response = self._request(
+            "POST",
+            f"/collections/{quote(self.collection_name)}/points/count",
+            payload,
+        )
+        result = response.get("result") or {}
+        return int(result.get("count") or 0)
+
+    def scroll_payloads(
+        self,
+        *,
+        limit: int = 50,
+        offset: int = 0,
+        source_file: str | None = None,
+    ) -> tuple[list[dict[str, Any]], int]:
+        self.ensure_collection()
+        safe_limit = max(1, min(limit, 200))
+        safe_offset = max(0, offset)
+        qdrant_filter = _source_file_filter(source_file)
+        total = self.get_points_count(source_file=source_file)
+        if total <= 0:
+            return [], 0
+
+        points: list[dict[str, Any]] = []
+        next_page_offset: Any = None
+        while len(points) < total:
+            payload: dict[str, Any] = {
+                "limit": min(256, max(total - len(points), 1)),
+                "with_payload": True,
+                "with_vector": False,
+            }
+            if qdrant_filter:
+                payload["filter"] = qdrant_filter
+            if next_page_offset is not None:
+                payload["offset"] = next_page_offset
+
+            response = self._request(
+                "POST",
+                f"/collections/{quote(self.collection_name)}/points/scroll",
+                payload,
+            )
+            result = response.get("result") or {}
+            batch = result.get("points") or []
+            if not isinstance(batch, list) or not batch:
+                break
+            points.extend(batch)
+            next_page_offset = result.get("next_page_offset")
+            if next_page_offset is None:
+                break
+
+        points.sort(
+            key=lambda point: str((point.get("payload") or {}).get("chunk_id", ""))
+        )
+        return points[safe_offset : safe_offset + safe_limit], total
+
     def search(self, query: str, top_k: int = 4) -> list[RetrievedKnowledge]:
         self.ensure_collection()
         response = self._request(
@@ -174,6 +238,19 @@ def _extract_vector_size(collection_response: dict[str, Any]) -> int | None:
             if isinstance(vector_config, dict) and "size" in vector_config:
                 return int(vector_config["size"])
     return None
+
+
+def _source_file_filter(source_file: str | None) -> dict[str, Any] | None:
+    if not source_file:
+        return None
+    return {
+        "must": [
+            {
+                "key": "source_file",
+                "match": {"value": source_file},
+            }
+        ]
+    }
 
 
 def _normalize_score(value: Any) -> float:
