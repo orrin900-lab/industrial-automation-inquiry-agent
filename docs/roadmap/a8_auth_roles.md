@@ -96,4 +96,17 @@ POST /api/auth/logout
 - Docker Compose 正常。
 - `/analyze` 仍可用。
 - review 仍可提交。
+## 7. A8 实施结果
+
+A8 已按轻量 demo auth 范围实现：
+
+- 后端新增 auth API、demo 用户、token 鉴权和角色依赖。
+- `/api/knowledge/*` 已限制为 admin。
+- review 在带 token 时记录当前登录用户。
+- 前端新增 `/login`、UserMenu、AuthGuard。
+- `Knowledge Base Admin` 导航和页面对非 admin 做限制。
+- backend pytest：23 passed。
+- frontend build：passed。
+
+仍然不做 SSO、OAuth、多租户、短信验证码、密码找回或字段级权限。
 

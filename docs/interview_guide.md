@@ -201,3 +201,16 @@ A6 已经把轻量 keyword RAG 升级为 Qdrant-based Vector Retrieval + Keyword
 ```text
 A7.5 证明这个项目不仅能跑 Agent，还具备 RAG 状态可观测、索引重建和人工审核闭环，适合用于面试展示工程完整性。
 ```
+## A8 面试补充：权限与角色 Auth & Roles
+
+**为什么要做 A8？**
+
+因为 A7 之前的后台更像公开 Demo。真实业务后台至少需要知道“谁在操作”和“哪些功能只允许管理员访问”。A8 用轻量 demo auth 补上了这个工程边界。
+
+**怎么设计？**
+
+后端新增 `POST /api/auth/login`、`GET /api/auth/me`、`POST /api/auth/logout`，使用本地 demo 用户和签名 token；前端新增 `/login`、UserMenu 和 AuthGuard。`/api/knowledge/*` 和 `/knowledge` 只允许 admin 访问，sales/support 可以继续处理询盘和 Review。
+
+**如何说明边界？**
+
+这是 portfolio / prototype 级权限系统，不是完整生产身份平台。它没有 SSO、OAuth、多租户、密码找回、短信验证码或字段级权限。生产化时会替换为企业身份服务，并增加审计日志、密码策略和更细粒度权限。

@@ -140,3 +140,16 @@ A7 当前只做轻量知识库运维：查看状态、查看 chunks、手动 reb
 | A7.5 | Docker Compose | PASS | postgres/backend/frontend healthy，qdrant running。 |
 
 A7.5 继续保持边界：不做知识库上传、在线编辑、删除 chunk、登录权限、Redis、邮件系统、CRM/ERP 或报价系统；不自动报价、不承诺库存、不承诺交期、不自动发送邮件，英文回复草稿必须人工审核。
+## A8 Auth & Role-Based Access Test Results
+
+| Priority | Test Case | Result | Notes |
+|---|---|---|---|
+| A8 | Login API | PASS | `POST /api/auth/login` covered by backend tests. |
+| A8 | Current user API | PASS | `GET /api/auth/me` covered by backend tests. |
+| A8 | Demo roles | PASS | `admin` / `sales` / `support` demo users are available. |
+| A8 | Knowledge admin access | PASS | admin can access `/api/knowledge/status`; sales receives 403 in tests. |
+| A8 | Review current user | PASS | authenticated sales review records `sales@example.com`. |
+| A8 | Backend pytest | PASS | A8 run: 23 passed. |
+| A8 | Frontend build | PASS | A8 run: Next.js build passed. |
+
+A8 仍然是 prototype demo auth，不是完整企业 SSO / OAuth / 多租户账号系统。

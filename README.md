@@ -273,3 +273,15 @@ QDRANT_URL=http://127.0.0.1:6333
 - 采用 Human-in-the-loop 设计，避免自动报价、库存承诺、交期承诺和自动邮件发送等高风险行为。
 
 英文简历 bullet points 保留在 [docs/resume_description.md](docs/resume_description.md)。
+## 16. A8 权限与角色 Auth & Role-Based Access
+
+A8 在现有后台基础上新增轻量 demo 权限系统，让项目更接近企业内部业务后台骨架：
+
+- 新增 `/login` 页面，支持中文 / English 切换。
+- 新增 `POST /api/auth/login`、`GET /api/auth/me`、`POST /api/auth/logout`。
+- 提供 demo 用户：`admin@example.com / admin123`、`sales@example.com / sales123`、`support@example.com / support123`。
+- 前端顶部显示当前用户与角色，并支持退出登录。
+- `Knowledge Base Admin` / `/knowledge` 仅 admin 可访问；sales / support 会看到无权限提示。
+- Review 提交时如果用户已登录，后端会记录当前登录用户。
+
+边界说明：A8 是 portfolio / prototype 级 demo auth，不是完整企业 SSO / OAuth / 多租户账号系统；没有接入真实企业用户、短信验证码、密码找回或字段级权限。

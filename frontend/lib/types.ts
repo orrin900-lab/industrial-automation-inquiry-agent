@@ -1,5 +1,22 @@
 export type InquiryChannel = "website" | "email" | string;
 
+export interface AuthUser {
+  email: string;
+  name: string;
+  role: "admin" | "sales" | "support" | string;
+}
+
+export interface LoginPayload {
+  email: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  access_token: string;
+  token_type: string;
+  user: AuthUser;
+}
+
 export interface InquiryInput {
   channel: InquiryChannel;
   customer_name?: string;

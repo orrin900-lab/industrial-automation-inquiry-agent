@@ -3,7 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LanguageToggle } from "@/components/LanguageToggle";
+import { UserMenu } from "@/components/UserMenu";
+import { getStoredUser } from "@/lib/auth";
 import { useI18n } from "@/lib/i18n";
+import { useEffect, useState } from "react";
+import type { AuthUser } from "@/lib/types";
 
 const navItems = [
   { href: "/", labelKey: "nav.dashboard" },
@@ -15,6 +19,25 @@ const navItems = [
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { t } = useI18n();
+  const [user, setUser] = useState<AuthUser | null>(null);
+
+  useEffect(() => {
+    function syncUser() {
+      setUser(getStoredUser());
+    }
+
+    syncUser();
+    window.addEventListener("auth-session-changed", syncUser);
+    window.addEventListener("storage", syncUser);
+    return () => {
+      window.removeEventListener("auth-session-changed", syncUser);
+      window.removeEventListener("storage", syncUser);
+    };
+  }, []);
+
+  const visibleNavItems = navItems.filter(
+    (item) => item.href !== "/knowledge" || user?.role === "admin"
+  );
 
   return (
     <div className="min-h-screen bg-[#eef2f7]">
@@ -27,7 +50,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
           <div className="flex flex-wrap items-center gap-3">
             <nav className="flex flex-wrap gap-2">
-              {navItems.map((item) => {
+              {visibleNavItems.map((item) => {
                 const active =
                   item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
                 return (
@@ -45,6 +68,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 );
               })}
             </nav>
+            <UserMenu />
             <LanguageToggle />
           </div>
         </div>

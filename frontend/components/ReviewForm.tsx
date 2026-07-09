@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { submitReview } from "@/lib/api";
+import { getStoredUser } from "@/lib/auth";
 import { useI18n } from "@/lib/i18n";
 
 const reviewStatuses = [
@@ -21,7 +22,7 @@ export function ReviewForm({
   editedReply: string;
   onSubmitted?: () => void;
 }) {
-  const [reviewerName, setReviewerName] = useState("Sales User");
+  const [reviewerName, setReviewerName] = useState(() => getStoredUser()?.email || "Sales User");
   const [reviewStatus, setReviewStatus] = useState("need_clarification");
   const [reviewerNote, setReviewerNote] = useState("");
   const [submitting, setSubmitting] = useState(false);

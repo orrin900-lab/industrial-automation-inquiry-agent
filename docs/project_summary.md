@@ -109,3 +109,14 @@ A7.5 完成 Knowledge Base Admin 浏览器复测、截图和稳定验证：
 - `job_application_notes.md`: 投递岗位、简历写法、面试边界和后续补强建议。
 
 这些材料用于 GitHub 作品集、简历投递、面试讲解和技术追问准备。所有材料继续明确：项目使用高仿真模拟数据，是 portfolio / prototype 工程化项目，不自动报价、不承诺库存、不承诺交期、不自动发送邮件。
+## 11. A8 权限与角色系统 Auth & Roles
+
+A8 新增轻量 demo 权限系统：
+
+- `/login` 登录页。
+- `POST /api/auth/login`、`GET /api/auth/me`、`POST /api/auth/logout`。
+- demo roles：`admin`、`sales`、`support`。
+- `Knowledge Base Admin` 限制为 admin。
+- Review 操作在登录状态下记录当前用户。
+
+该能力用于展示业务后台的权限边界，不代表完整生产级身份系统。当前不做 SSO、OAuth、多租户、密码找回、手机验证码或字段级权限。

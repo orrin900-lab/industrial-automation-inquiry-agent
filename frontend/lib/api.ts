@@ -1,5 +1,6 @@
 import type {
   AnalyzeResponse,
+  AuthUser,
   InquiryDetail,
   InquiryInput,
   InquiryListItem,
@@ -7,9 +8,12 @@ import type {
   KnowledgeChunksResponse,
   KnowledgeStatus,
   KnowledgeReindexResponse,
+  LoginPayload,
+  LoginResponse,
   ReviewPayload,
   SampleInquiry
 } from "@/lib/types";
+import { authHeader } from "@/lib/auth";
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/$/, "") || "http://127.0.0.1:8000";
@@ -62,6 +66,7 @@ async function requestJson<T>(
       ...options,
       headers: {
         "Content-Type": "application/json",
+        ...authHeader(),
         ...(options?.headers || {})
       }
     });
@@ -87,6 +92,24 @@ async function requestJson<T>(
 
 export function getHealth(): Promise<HealthResponse> {
   return requestJson<HealthResponse>("/api/health");
+}
+
+export function login(payload: LoginPayload): Promise<LoginResponse> {
+  return requestJson<LoginResponse>("/api/auth/login", {
+    method: "POST",
+    body: JSON.stringify(payload)
+  });
+}
+
+export function getCurrentUser(): Promise<AuthUser> {
+  return requestJson<AuthUser>("/api/auth/me");
+}
+
+export function logout(): Promise<{ status: string; message: string }> {
+  return requestJson<{ status: string; message: string }>("/api/auth/logout", {
+    method: "POST",
+    body: JSON.stringify({})
+  });
 }
 
 export function analyzeInquiry(payload: InquiryInput): Promise<AnalyzeResponse> {

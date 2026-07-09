@@ -9,6 +9,15 @@ from app.utils.config import get_config
 client = TestClient(app)
 
 
+def _admin_headers() -> dict[str, str]:
+    response = client.post(
+        "/api/auth/login",
+        json={"email": "admin@example.com", "password": "admin123"},
+    )
+    assert response.status_code == 200
+    return {"Authorization": f"Bearer {response.json()['access_token']}"}
+
+
 def _enable_unavailable_qdrant(monkeypatch):
     monkeypatch.setenv("ENABLE_QDRANT_RAG", "true")
     monkeypatch.setenv("RAG_RETRIEVAL_MODE", "qdrant")
@@ -20,7 +29,7 @@ def _enable_unavailable_qdrant(monkeypatch):
 def test_knowledge_status_does_not_crash_when_qdrant_unavailable(monkeypatch):
     _enable_unavailable_qdrant(monkeypatch)
 
-    response = client.get("/api/knowledge/status")
+    response = client.get("/api/knowledge/status", headers=_admin_headers())
 
     assert response.status_code == 200
     body = response.json()
@@ -35,7 +44,7 @@ def test_knowledge_status_does_not_crash_when_qdrant_unavailable(monkeypatch):
 def test_knowledge_chunks_returns_clear_error_structure(monkeypatch):
     _enable_unavailable_qdrant(monkeypatch)
 
-    response = client.get("/api/knowledge/chunks?limit=5&offset=0")
+    response = client.get("/api/knowledge/chunks?limit=5&offset=0", headers=_admin_headers())
 
     assert response.status_code == 200
     body = response.json()
@@ -59,7 +68,7 @@ def test_knowledge_reindex_can_be_mocked(monkeypatch):
 
     monkeypatch.setattr("app.api.knowledge.rebuild_knowledge_index", fake_rebuild)
 
-    response = client.post("/api/knowledge/reindex")
+    response = client.post("/api/knowledge/reindex", headers=_admin_headers())
 
     assert response.status_code == 200
     body = response.json()

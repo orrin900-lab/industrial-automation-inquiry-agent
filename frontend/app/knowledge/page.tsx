@@ -6,6 +6,7 @@ import {
   getKnowledgeStatus,
   rebuildKnowledgeIndex
 } from "@/lib/api";
+import { AuthGuard } from "@/components/AuthGuard";
 import type {
   KnowledgeChunkItem,
   KnowledgeChunksResponse,
@@ -18,6 +19,14 @@ import { useI18n } from "@/lib/i18n";
 const PAGE_SIZE = 10;
 
 export default function KnowledgePage() {
+  return (
+    <AuthGuard allowedRoles={["admin"]}>
+      <KnowledgePageContent />
+    </AuthGuard>
+  );
+}
+
+function KnowledgePageContent() {
   const { t } = useI18n();
   const [status, setStatus] = useState<KnowledgeStatus | null>(null);
   const [chunks, setChunks] = useState<KnowledgeChunksResponse | null>(null);

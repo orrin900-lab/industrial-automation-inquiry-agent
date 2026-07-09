@@ -3,8 +3,10 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
+from app.core.dependencies import get_optional_current_user
 from app.data_access.inquiry_repository import InquiryRepository
 from app.db.session import get_db
+from app.schemas.auth import AuthUser
 from app.schemas.inquiry import InquiryInput
 from app.schemas.review import ReviewInput
 from app.services.agent_service import (
@@ -94,11 +96,13 @@ def create_review_endpoint(
     inquiry_id: int,
     review_input: ReviewInput,
     db: Session = Depends(get_db),
+    current_user: AuthUser | None = Depends(get_optional_current_user),
 ) -> dict:
+    reviewer_name = current_user.email if current_user else review_input.reviewer_name
     log = create_review(
         db,
         inquiry_id=inquiry_id,
-        reviewer_name=review_input.reviewer_name,
+        reviewer_name=reviewer_name,
         review_status=review_input.review_status,
         edited_reply=review_input.edited_reply,
         reviewer_note=review_input.reviewer_note,

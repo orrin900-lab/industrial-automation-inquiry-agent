@@ -1,7 +1,8 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Depends, Query
 
+from app.core.dependencies import require_roles
 from app.services.knowledge_service import (
     get_knowledge_status,
     list_knowledge_chunks,
@@ -9,7 +10,11 @@ from app.services.knowledge_service import (
 )
 
 
-router = APIRouter(prefix="/knowledge", tags=["knowledge"])
+router = APIRouter(
+    prefix="/knowledge",
+    tags=["knowledge"],
+    dependencies=[Depends(require_roles("admin"))],
+)
 
 
 @router.get("/status")
