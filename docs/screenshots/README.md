@@ -51,3 +51,11 @@ A6 之后，Agent Trace 中可展示 `Knowledge Retriever=qdrant`，Retrieved Kn
 | `13_knowledge_reindex_success.png` | captured | 手动 `Rebuild Qdrant Index` 成功后的页面状态，展示 rebuild success 与 chunks 筛选后的知识分片。 |
 
 这些截图来自真实本地页面 `http://127.0.0.1:3001/knowledge`，用于展示 Qdrant RAG 轻量运维后台。当前页面不支持上传、编辑或删除知识文档。
+## A8 Auth & Roles 截图
+
+| File | Status | 展示内容 |
+| --- | --- | --- |
+| `14_login_page.png` | captured | `/login` 页面，展示 demo 用户、登录表单和 prototype auth 边界说明。 |
+| `15_role_based_knowledge_access.png` | captured | sales 角色访问 `/knowledge` 时的无权限提示，体现 Knowledge Base Admin 仅限 admin。 |
+
+这些截图来自真实本地页面 `http://127.0.0.1:3001/login` 和 `http://127.0.0.1:3001/knowledge`。A8 仅提供 demo Auth & Role-Based Access，不代表完整企业 SSO / OAuth / 多租户权限系统。

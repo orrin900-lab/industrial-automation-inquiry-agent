@@ -153,3 +153,17 @@ A7.5 继续保持边界：不做知识库上传、在线编辑、删除 chunk、
 | A8 | Frontend build | PASS | A8 run: Next.js build passed. |
 
 A8 仍然是 prototype demo auth，不是完整企业 SSO / OAuth / 多租户账号系统。
+A8 仍然是 prototype demo auth，不是完整企业 SSO / OAuth / 多租户账号系统。
+
+## A8.5 Auth & Roles Stabilization Results
+
+| Priority | Test Case | Result | Notes |
+|---|---|---|---|
+| A8.5 | Docker Compose | PASS | postgres/backend/frontend healthy, qdrant running. |
+| A8.5 | `/login` page | PASS | HTTP 200 and screenshot captured as `14_login_page.png`. |
+| A8.5 | Admin knowledge access | PASS | admin token can access `/api/knowledge/status`; Qdrant available, points_count = 21. |
+| A8.5 | Sales knowledge restriction | PASS | sales token receives 403 for `/api/knowledge/status`; screenshot captured as `15_role_based_knowledge_access.png`. |
+| A8.5 | `/analyze` regression | PASS | PLC sample returns AgentResult with product_category = PLC. |
+| A8.5 | Review regression | PASS | sales review submitted and recorded as `sales@example.com`. |
+| A8.5 | Backend pytest | PASS | 23 passed. |
+| A8.5 | Frontend build | PASS | Next.js build passed. |

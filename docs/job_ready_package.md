@@ -174,3 +174,5 @@ A8 可以作为“从公开 demo 到业务后台”的工程化补强点：
 它不是完整企业 SSO，但能体现后台系统最基本的权限边界：业务员可以处理询盘，
 管理员才可以进入 Knowledge Base Admin 做 Qdrant index 运维。
 ```
+
+A8.5 已补充登录页和角色权限截图，可在 GitHub README / docs 中配合讲解：这是轻量 Auth & Role-Based Access，不是生产级账号系统，但能体现后台权限边界设计。

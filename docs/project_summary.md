@@ -120,3 +120,13 @@ A8 新增轻量 demo 权限系统：
 - Review 操作在登录状态下记录当前用户。
 
 该能力用于展示业务后台的权限边界，不代表完整生产级身份系统。当前不做 SSO、OAuth、多租户、密码找回、手机验证码或字段级权限。
+
+## 12. A8.5 稳定收口
+
+A8.5 完成 Auth & Roles 浏览器/API 复测和截图补充：
+
+- 新增截图 `docs/screenshots/14_login_page.png`。
+- 新增截图 `docs/screenshots/15_role_based_knowledge_access.png`。
+- 验证 admin 可访问 Knowledge Base Admin。
+- 验证 sales 访问 knowledge API 返回 403。
+- 回归验证 `/analyze` 与 Review 流程。
