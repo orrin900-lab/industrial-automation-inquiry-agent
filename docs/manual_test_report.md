@@ -193,3 +193,30 @@ A8 仍然是 prototype demo auth，不是完整企业 SSO / OAuth / 多租户账
 A-Final 已补齐客服/业务员后台闭环：Public Website Inquiry、Email Inquiry Import、Inquiry Console、Requirement Confirmation Card、Candidate Products、Reply Draft edit/copy/export、Human Review、Follow-up Status、Product Library Admin、Knowledge Upload、Qdrant Rebuild Index、Redis basic status integration。
 
 当前边界保持不变：No automatic quotation, no stock commitment, no delivery commitment, no automatic email sending, manual review required。当前产品数据和知识库数据仍为高仿真模拟数据；项目定位仍是 portfolio / prototype 工程化项目，不代表完整生产系统。
+
+## A-Final Customer/Sales Console Test Results
+
+| Priority | Test Case | Result | Notes |
+|---|---|---|---|
+| A-Final.5 | `/login` | PASS | HTTP 200；admin / sales / support login API 均通过。 |
+| A-Final.5 | `/public-inquiry` | PASS | 未登录可提交官网询盘，返回 `channel=website`，生成 inquiry id。 |
+| A-Final.5 | `/analyze` Website Inquiry | PASS | 现有 Website Inquiry 分析流程保留。 |
+| A-Final.5 | `/analyze` Email Inquiry | PASS | Email Inquiry API 回归通过，VFD sample 返回 AgentResult，matched products = 5。 |
+| A-Final.5 | `/inquiries` filters | PASS | API 验证 `channel=email` + `product_category=VFD` 可返回列表。 |
+| A-Final.5 | `/inquiries/{id}` detail | PASS | 详情 API 返回 inquiry + agent_result + review_logs。 |
+| A-Final.5 | Requirement Confirmation Card | PASS | 前端 build 包含详情页组件；数据来自 AgentResult。 |
+| A-Final.5 | Candidate Products | PASS | Email Inquiry 分析返回候选产品。 |
+| A-Final.5 | Reply Draft Edit | PASS | 详情页保留可编辑 textarea。 |
+| A-Final.5 | Copy Reply | PASS | 前端实现 Clipboard copy，需浏览器手动点击复核。 |
+| A-Final.5 | Export Markdown | PASS | 前端实现 Markdown blob download，需浏览器手动点击复核。 |
+| A-Final.5 | Human Review | PASS | Review API 返回 `approved`。 |
+| A-Final.5 | Follow-up Status | PASS | `PATCH /api/inquiries/{id}/status` 返回 `followed_up`。 |
+| A-Final.5 | Product Library | PASS | admin `/api/products` 返回产品；sales 访问返回 403。 |
+| A-Final.5 | Knowledge Upload | PASS | 非 `.md` 上传返回失败；`.md` 上传成功。 |
+| A-Final.5 | Redis/System Status | PASS | `/api/system/status` 返回 `redis_available=true`。 |
+| A-Final.5 | Docker Compose | PASS | postgres/backend/frontend/qdrant/redis 启动；backend/frontend/redis healthy。 |
+| A-Final.5 | Backend pytest | PASS | 39 passed。 |
+| A-Final.5 | Frontend build | PASS | Next.js build passed，包含 `/public-inquiry` 和 `/products`。 |
+| A-Final.5 | Business Boundary | PASS | 文档继续说明不自动报价、不承诺库存、不承诺交期、不自动发送邮件，英文回复草稿必须人工审核。 |
+
+截图说明：自动截图工具需要从外部 npm registry 获取 Playwright CLI，本环境被安全策略拒绝，因此 A-Final 截图 `16_public_inquiry_form.png` 到 `20_knowledge_upload.png` 暂标记为 pending，需要用户手动截图补齐；未伪造截图。

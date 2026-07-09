@@ -86,3 +86,15 @@ docker-compose up -d --build
 - `npm run build`
 - `docker-compose config`
 - `docker-compose up -d --build`
+
+## 8. A-Final.5 验收记录
+
+- Docker Compose：PASS，`postgres` / `backend` / `frontend` / `qdrant` / `redis` 可启动，backend/frontend/redis healthy。
+- Backend pytest：PASS，39 passed。
+- Frontend build：PASS，Next.js build passed。
+- HTTP/API 回归：PASS，`/login`、`/public-inquiry`、`/analyze`、`/inquiries`、`/knowledge`、`/products`、`/api/system/status` 均验证可用。
+- Role Access：PASS，admin 可访问 Knowledge/Product Admin，sales 访问返回 403。
+- Knowledge Upload：PASS，非 `.md` 被拒绝，`.md` 上传成功。
+- Business Boundary：PASS，系统仍不自动报价、不承诺库存、不承诺交期、不自动发送邮件。
+
+截图状态：A-Final 页面截图 16-20 暂为 pending，需要用户手动截取真实页面；不得引用不存在的图片。
