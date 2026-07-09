@@ -1,22 +1,22 @@
 ﻿from app.data_access.product_repository import (
-    ProductRepository,
     important_tokens,
     normalize_category,
     normalize_token,
     product_to_search_text,
 )
+from app.data_providers.product_provider import ProductDataProvider, get_product_data_provider
 from app.schemas.product import Product, ProductCandidate
 from app.schemas.requirement import ExtractedRequirement
 
 
 class ProductMatcher:
-    def __init__(self, product_repository: ProductRepository | None = None) -> None:
-        self.product_repository = product_repository or ProductRepository()
+    def __init__(self, product_provider: ProductDataProvider | None = None) -> None:
+        self.product_provider = product_provider or get_product_data_provider()
 
     def match(
         self, requirement: ExtractedRequirement, limit: int = 5
     ) -> list[ProductCandidate]:
-        products = self.product_repository.list_products(requirement.product_category)
+        products = self.product_provider.list_products(requirement.product_category)
         candidates = [self._score_product(product, requirement) for product in products]
         candidates = [candidate for candidate in candidates if candidate.match_score > 0]
         candidates.sort(key=lambda candidate: candidate.match_score, reverse=True)

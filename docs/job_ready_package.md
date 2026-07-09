@@ -176,3 +176,21 @@ A8 可以作为“从公开 demo 到业务后台”的工程化补强点：
 ```
 
 A8.5 已补充登录页和角色权限截图，可在 GitHub README / docs 中配合讲解：这是轻量 Auth & Role-Based Access，不是生产级账号系统，但能体现后台权限边界设计。
+
+## 15. A9 Business Data Adapter 求职亮点
+
+A9 可以作为“从 demo 数据到真实企业数据”的工程化预留亮点：
+
+- 用 `ProductDataProvider` 抽象产品数据来源。
+- 当前保留 `CSVProductProvider`，未来可替换 PostgreSQL 产品表或 ERP。
+- 用 `InquirySourceProvider` 抽象询盘来源。
+- 当前保留 `ManualInquiryProvider`，未来可接 Website / Email / CRM。
+- reserved provider 会明确 fallback，不让 Demo 因未接真实系统而崩溃。
+
+面试表达建议：
+
+```text
+我没有直接把 CSV 读取散落在 Agent 节点里，而是抽象成 ProductDataProvider。
+当前实现仍读模拟 CSV，但 ProductMatcher 依赖的是 provider 接口，未来换成数据库或 ERP 时，
+Agent workflow 和前端 API 不需要大改。
+```

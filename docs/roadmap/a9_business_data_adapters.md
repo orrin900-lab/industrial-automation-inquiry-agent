@@ -61,3 +61,24 @@ InquirySourceProvider
 - 不破坏现有 ProductRepository。
 - 后续 A9 实现时应保留 CSV fallback。
 
+## 7. A9 实施结果
+
+A9 已完成轻量数据适配层实现：
+
+- `backend/app/data_providers/product_provider.py`
+- `backend/app/data_providers/csv_product_provider.py`
+- `backend/app/data_providers/database_product_provider.py`
+- `backend/app/data_providers/erp_product_provider.py`
+- `backend/app/data_providers/inquiry_source_provider.py`
+- `backend/app/data_providers/manual_inquiry_provider.py`
+- `backend/app/data_providers/website_inquiry_provider.py`
+- `backend/app/data_providers/email_inquiry_provider.py`
+
+当前默认配置：
+
+```env
+PRODUCT_PROVIDER=csv
+INQUIRY_SOURCE_PROVIDER=manual
+```
+
+reserved provider 当前仅作为未来接口骨架，不接真实 ERP、CRM、邮箱或数据库产品表。测试覆盖 provider fallback、manual normalize、`/analyze` 回归、auth 和 knowledge 回归。

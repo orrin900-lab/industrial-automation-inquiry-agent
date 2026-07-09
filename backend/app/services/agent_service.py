@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 
 from app.agents.graph import run_inquiry_agent
+from app.data_providers.inquiry_source_provider import get_inquiry_source_provider
 from app.repositories.agent_result_repository import (
     AgentResultRepository,
     agent_result_to_dict,
@@ -17,6 +18,7 @@ from app.utils.config import get_config
 
 
 def analyze_inquiry(inquiry_input: InquiryInput, db: Session | None = None):
+    inquiry_input = get_inquiry_source_provider().normalize(inquiry_input)
     if db is None:
         return run_inquiry_agent(inquiry_input)
     return analyze_and_persist_inquiry(inquiry_input, db)

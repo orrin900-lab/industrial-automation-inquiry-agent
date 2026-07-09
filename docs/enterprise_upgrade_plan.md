@@ -145,3 +145,15 @@ A+ 完成后，项目应具备：
 - 可用于面试讲解的评估与监控增强规划。
 - 继续保持 portfolio / prototype 工程化项目定位。
 
+## 11. A9 实施结果
+
+A9 已从规划推进到轻量实现：
+
+- 新增 `ProductDataProvider` 抽象。
+- 默认 `CSVProductProvider` 继续读取 `backend/data/products.csv`。
+- `DatabaseProductProvider` 和 `ERPProductProvider` 作为 reserved skeleton。
+- 新增 `InquirySourceProvider` 抽象。
+- 默认 `ManualInquiryProvider` 保留手动输入询盘。
+- `WebsiteInquiryProvider` / `EmailInquiryProvider` 作为来源标准化预留。
+- 当前没有接入真实 ERP / CRM / 邮箱。
+- `/analyze`、`/knowledge`、`/login` 保持兼容。

@@ -158,3 +158,23 @@ flowchart TD
 - `POST /api/knowledge/reindex`: 复用 Markdown loader、splitter、hashing embedding 和 Qdrant upsert 逻辑重建索引。
 
 该页面只用于轻量运维展示，不支持上传、编辑、删除知识文档，也不引入登录、Redis、邮件、CRM/ERP 或报价系统。
+## A9 数据适配层 Business Data Adapter Layer
+
+A9 在 Agent Core 与模拟数据之间增加 provider 抽象：
+
+```mermaid
+flowchart TD
+    API["FastAPI API"] --> S["Agent Service"]
+    S --> ISP["InquirySourceProvider"]
+    ISP --> M["ManualInquiryProvider"]
+    ISP --> W["WebsiteInquiryProvider reserved"]
+    ISP --> E["EmailInquiryProvider reserved"]
+    S --> A["Agent Core"]
+    A --> PM["ProductMatcher"]
+    PM --> PDP["ProductDataProvider"]
+    PDP --> CSV["CSVProductProvider"]
+    PDP --> DBP["DatabaseProductProvider reserved"]
+    PDP --> ERP["ERPProductProvider reserved"]
+```
+
+当前默认仍是 `CSVProductProvider` + `ManualInquiryProvider`。`DatabaseProductProvider` 和 `ERPProductProvider` 只是未来接入 PostgreSQL 产品表、SAP / 金蝶 / 用友 / 内部 ERP 的接口骨架，不代表已经接入真实企业数据。

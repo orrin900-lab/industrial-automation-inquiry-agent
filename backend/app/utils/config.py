@@ -39,6 +39,11 @@ class RAGConfig(BaseModel):
         )
 
 
+class DataProviderConfig(BaseModel):
+    product_provider: str = "csv"
+    inquiry_source_provider: str = "manual"
+
+
 class AppConfig(BaseModel):
     project_root: Path
     data_dir: Path
@@ -51,6 +56,7 @@ class AppConfig(BaseModel):
     database_url: str
     llm: LLMConfig
     rag: RAGConfig
+    data_providers: DataProviderConfig
 
 
 @lru_cache(maxsize=1)
@@ -88,6 +94,10 @@ def get_config() -> AppConfig:
             qdrant_vector_size=int(os.getenv("QDRANT_VECTOR_SIZE", "384")),
             qdrant_timeout_seconds=float(os.getenv("QDRANT_TIMEOUT_SECONDS", "3")),
             rag_retrieval_mode=os.getenv("RAG_RETRIEVAL_MODE", "keyword"),
+        ),
+        data_providers=DataProviderConfig(
+            product_provider=os.getenv("PRODUCT_PROVIDER", "csv"),
+            inquiry_source_provider=os.getenv("INQUIRY_SOURCE_PROVIDER", "manual"),
         ),
     )
 

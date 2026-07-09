@@ -130,3 +130,14 @@ A8.5 完成 Auth & Roles 浏览器/API 复测和截图补充：
 - 验证 admin 可访问 Knowledge Base Admin。
 - 验证 sales 访问 knowledge API 返回 403。
 - 回归验证 `/analyze` 与 Review 流程。
+
+## 13. A9 业务数据适配层 Business Data Adapter Layer
+
+A9 新增数据 provider 抽象，为未来接入真实企业数据预留工程边界：
+
+- 产品数据：`ProductDataProvider`、`CSVProductProvider`、`DatabaseProductProvider`、`ERPProductProvider`。
+- 询盘来源：`InquirySourceProvider`、`ManualInquiryProvider`、`WebsiteInquiryProvider`、`EmailInquiryProvider`。
+- 当前默认仍使用 `CSVProductProvider` 和 `ManualInquiryProvider`。
+- reserved provider 不会静默失败；当前会明确 fallback 到 CSV / Manual。
+
+该阶段不接真实 ERP、CRM、邮箱、库存或报价系统，不改变当前业务边界。

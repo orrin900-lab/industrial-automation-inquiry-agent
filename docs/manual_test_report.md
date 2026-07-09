@@ -153,6 +153,22 @@ A7.5 继续保持边界：不做知识库上传、在线编辑、删除 chunk、
 | A8 | Frontend build | PASS | A8 run: Next.js build passed. |
 
 A8 仍然是 prototype demo auth，不是完整企业 SSO / OAuth / 多租户账号系统。
+
+## A9 Business Data Adapter Layer Test Results
+
+| Priority | Test Case | Result | Notes |
+|---|---|---|---|
+| A9 | CSVProductProvider reads products.csv | PASS | Covered by `test_product_providers.py`. |
+| A9 | ProductDataProvider list/get/search | PASS | CSV provider returns Product schema objects. |
+| A9 | Reserved product provider fallback | PASS | `PRODUCT_PROVIDER=erp` falls back to CSV with clear reason. |
+| A9 | ManualInquiryProvider normalize | PASS | Raw dict normalizes to `InquiryInput`. |
+| A9 | Website / Email provider skeleton | PASS | Source/channel standardization covered by tests. |
+| A9 | `/analyze` regression | PASS | Analyze still returns PLC AgentResult and matched products. |
+| A9 | `/knowledge` regression | PASS | Admin knowledge status remains available with fallback. |
+| A9 | Auth regression | PASS | Existing auth tests remain passing. |
+| A9 | Backend pytest | PASS | A9 run: 33 passed. |
+
+A9 不接真实 ERP / CRM / 邮箱，不做库存同步、报价系统或自动邮件发送。
 A8 仍然是 prototype demo auth，不是完整企业 SSO / OAuth / 多租户账号系统。
 
 ## A8.5 Auth & Roles Stabilization Results

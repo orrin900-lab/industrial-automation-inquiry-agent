@@ -43,6 +43,8 @@ services:
       QDRANT_COLLECTION: industrial_agent_knowledge
       QDRANT_VECTOR_SIZE: "384"
       RAG_RETRIEVAL_MODE: qdrant
+      PRODUCT_PROVIDER: csv
+      INQUIRY_SOURCE_PROVIDER: manual
       DB_INIT_MAX_ATTEMPTS: "30"
       DB_INIT_RETRY_DELAY_SECONDS: "2"
     healthcheck:
