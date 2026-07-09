@@ -164,9 +164,14 @@ A8 仍然是 prototype demo auth，不是完整企业 SSO / OAuth / 多租户账
 | A9 | ManualInquiryProvider normalize | PASS | Raw dict normalizes to `InquiryInput`. |
 | A9 | Website / Email provider skeleton | PASS | Source/channel standardization covered by tests. |
 | A9 | `/analyze` regression | PASS | Analyze still returns PLC AgentResult and matched products. |
+| A9 | `/login` regression | PASS | Login page and auth API remain available. |
 | A9 | `/knowledge` regression | PASS | Admin knowledge status remains available with fallback. |
+| A9 | Review regression | PASS | Sales review submission still works. |
 | A9 | Auth regression | PASS | Existing auth tests remain passing. |
 | A9 | Backend pytest | PASS | A9 run: 33 passed. |
+| A9.5 | Frontend build | PASS | Next.js build passed. |
+| A9.5 | Docker Compose | PASS | postgres/backend/frontend healthy, qdrant running. |
+| A9.5 | Provider smoke check | PASS | CSV list/get/search, Manual normalize, reserved provider fallback verified. |
 
 A9 不接真实 ERP / CRM / 邮箱，不做库存同步、报价系统或自动邮件发送。
 A8 仍然是 prototype demo auth，不是完整企业 SSO / OAuth / 多租户账号系统。

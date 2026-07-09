@@ -59,3 +59,12 @@ A6 之后，Agent Trace 中可展示 `Knowledge Retriever=qdrant`，Retrieved Kn
 | `15_role_based_knowledge_access.png` | captured | sales 角色访问 `/knowledge` 时的无权限提示，体现 Knowledge Base Admin 仅限 admin。 |
 
 这些截图来自真实本地页面 `http://127.0.0.1:3001/login` 和 `http://127.0.0.1:3001/knowledge`。A8 仅提供 demo Auth & Role-Based Access，不代表完整企业 SSO / OAuth / 多租户权限系统。
+## A9 Business Data Adapter Layer 截图说明
+
+A9 主要是后端架构增强，用于将当前 `CSVProductProvider` / `ManualInquiryProvider` 模拟数据抽象为可替换的 Provider 层，不对应新的独立前端页面。
+
+因此 A9.5 不新增 `16_business_data_adapter_notes.png`，避免伪造截图。A9 能力主要通过以下材料体现：
+
+- `docs/architecture.md` 中的 Business Data Adapter Layer 架构说明。
+- `docs/manual_test_report.md` 中的 A9 / A9.5 测试结果。
+- backend tests：`test_product_providers.py`、`test_inquiry_source_providers.py`、`test_a9_analyze_regression.py`。
