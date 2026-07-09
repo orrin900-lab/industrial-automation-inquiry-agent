@@ -12,6 +12,7 @@ const emptyForm: InquiryInput = {
   company: "",
   country: "",
   subject: "",
+  stated_product_category: "",
   message: "",
   attachments: []
 };
@@ -23,6 +24,7 @@ type InquiryTextField =
   | "company"
   | "country"
   | "subject"
+  | "stated_product_category"
   | "message";
 
 export function InquiryForm({
@@ -89,6 +91,7 @@ export function InquiryForm({
       company: sample.company || "",
       country: sample.country || "",
       subject: sample.subject || `${sample.expected_category || "Product"} inquiry`,
+      stated_product_category: sample.expected_category || "",
       message: sample.message,
       attachments: []
     });
@@ -145,16 +148,37 @@ export function InquiryForm({
       {formError ? <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{formError}</div> : null}
 
       <div className="grid gap-4 md:grid-cols-2">
-        <Field label={t("form.customerName")} value={form.customer_name || ""} onChange={(value) => updateField("customer_name", value)} />
-        <Field label={t("form.customerEmail")} value={form.customer_email || ""} onChange={(value) => updateField("customer_email", value)} />
+        <Field
+          label={form.channel === "email" ? "Sender Name" : t("form.customerName")}
+          value={form.customer_name || ""}
+          onChange={(value) => updateField("customer_name", value)}
+        />
+        <Field
+          label={form.channel === "email" ? "Sender Email" : t("form.customerEmail")}
+          value={form.customer_email || ""}
+          onChange={(value) => updateField("customer_email", value)}
+        />
         <Field label={t("form.company")} value={form.company || ""} onChange={(value) => updateField("company", value)} />
         <Field label={t("form.country")} value={form.country || ""} onChange={(value) => updateField("country", value)} />
       </div>
 
-      <Field label={t("form.subject")} value={form.subject || ""} onChange={(value) => updateField("subject", value)} />
+      <div className="grid gap-4 md:grid-cols-2">
+        <Field
+          label={form.channel === "email" ? "Email Subject" : t("form.subject")}
+          value={form.subject || ""}
+          onChange={(value) => updateField("subject", value)}
+        />
+        <Field
+          label="Product Category"
+          value={form.stated_product_category || ""}
+          onChange={(value) => updateField("stated_product_category", value)}
+        />
+      </div>
 
       <label className="space-y-1">
-        <span className="text-sm font-medium text-slate-700">{t("form.message")}</span>
+        <span className="text-sm font-medium text-slate-700">
+          {form.channel === "email" ? "Email Body" : t("form.message")}
+        </span>
         <textarea
           value={form.message}
           onChange={(event) => updateField("message", event.target.value)}

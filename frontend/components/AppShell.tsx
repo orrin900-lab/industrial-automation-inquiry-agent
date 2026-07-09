@@ -10,10 +10,12 @@ import { useEffect, useState } from "react";
 import type { AuthUser } from "@/lib/types";
 
 const navItems = [
-  { href: "/", labelKey: "nav.dashboard" },
-  { href: "/analyze", labelKey: "nav.analyze" },
-  { href: "/inquiries", labelKey: "nav.inquiries" },
-  { href: "/knowledge", labelKey: "nav.knowledge" }
+  { href: "/public-inquiry", labelKey: "nav.publicInquiry", public: true, adminOnly: false },
+  { href: "/", labelKey: "nav.dashboard", public: false, adminOnly: false },
+  { href: "/analyze", labelKey: "nav.analyze", public: false, adminOnly: false },
+  { href: "/inquiries", labelKey: "nav.inquiries", public: false, adminOnly: false },
+  { href: "/products", labelKey: "nav.products", public: false, adminOnly: true },
+  { href: "/knowledge", labelKey: "nav.knowledge", public: false, adminOnly: true }
 ] as const;
 
 export function AppShell({ children }: { children: React.ReactNode }) {
@@ -36,7 +38,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   }, []);
 
   const visibleNavItems = navItems.filter(
-    (item) => item.href !== "/knowledge" || user?.role === "admin"
+    (item) =>
+      item.public || (!item.adminOnly && user) || (item.adminOnly && user?.role === "admin")
   );
 
   return (

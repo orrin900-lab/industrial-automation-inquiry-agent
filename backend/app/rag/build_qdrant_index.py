@@ -20,13 +20,7 @@ class QdrantIndexBuildResult:
 
 def build_qdrant_index(config: AppConfig | None = None) -> QdrantIndexBuildResult:
     resolved_config = config or get_config()
-    documents = load_markdown_documents(
-        [
-            resolved_config.faq_md,
-            resolved_config.selection_rules_md,
-            resolved_config.email_templates_md,
-        ]
-    )
+    documents = load_markdown_documents(_knowledge_paths(resolved_config))
     chunks = split_markdown_documents(documents)
     store = QdrantStore(
         url=resolved_config.rag.qdrant_url,
@@ -46,3 +40,14 @@ def build_qdrant_index(config: AppConfig | None = None) -> QdrantIndexBuildResul
         qdrant_url=resolved_config.rag.qdrant_url,
         points_count=points_count,
     )
+
+
+def _knowledge_paths(config: AppConfig):
+    base_paths = [
+        config.faq_md,
+        config.selection_rules_md,
+        config.email_templates_md,
+    ]
+    if config.knowledge_upload_dir.exists():
+        base_paths.extend(sorted(config.knowledge_upload_dir.glob("*.md")))
+    return base_paths

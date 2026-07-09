@@ -1,4 +1,4 @@
-# 人工复测报告 Manual Test Report
+﻿# 人工复测报告 Manual Test Report
 
 ## 1. 测试环境 Test Environment
 
@@ -188,3 +188,8 @@ A8 仍然是 prototype demo auth，不是完整企业 SSO / OAuth / 多租户账
 | A8.5 | Review regression | PASS | sales review submitted and recorded as `sales@example.com`. |
 | A8.5 | Backend pytest | PASS | 23 passed. |
 | A8.5 | Frontend build | PASS | Next.js build passed. |
+## A-Final 客服/业务员后台最终集成版
+
+A-Final 已补齐客服/业务员后台闭环：Public Website Inquiry、Email Inquiry Import、Inquiry Console、Requirement Confirmation Card、Candidate Products、Reply Draft edit/copy/export、Human Review、Follow-up Status、Product Library Admin、Knowledge Upload、Qdrant Rebuild Index、Redis basic status integration。
+
+当前边界保持不变：No automatic quotation, no stock commitment, no delivery commitment, no automatic email sending, manual review required。当前产品数据和知识库数据仍为高仿真模拟数据；项目定位仍是 portfolio / prototype 工程化项目，不代表完整生产系统。

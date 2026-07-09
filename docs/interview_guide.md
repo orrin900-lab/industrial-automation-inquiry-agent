@@ -1,4 +1,4 @@
-# 面试讲解 Interview Guide
+﻿# 面试讲解 Interview Guide
 
 ## 1. 30 秒项目介绍
 
@@ -232,3 +232,8 @@ A1-A8 主要证明了 Agent、RAG、后台和权限闭环，但数据仍来自 C
 **边界怎么说？**
 
 A9 只是 adapter layer 预留，没有接入真实 ERP、CRM 或邮箱，也不做库存、报价或邮件发送。这样既展示生产化思路，又不夸大项目已经接入真实企业系统。
+## A-Final 客服/业务员后台最终集成版
+
+A-Final 已补齐客服/业务员后台闭环：Public Website Inquiry、Email Inquiry Import、Inquiry Console、Requirement Confirmation Card、Candidate Products、Reply Draft edit/copy/export、Human Review、Follow-up Status、Product Library Admin、Knowledge Upload、Qdrant Rebuild Index、Redis basic status integration。
+
+当前边界保持不变：No automatic quotation, no stock commitment, no delivery commitment, no automatic email sending, manual review required。当前产品数据和知识库数据仍为高仿真模拟数据；项目定位仍是 portfolio / prototype 工程化项目，不代表完整生产系统。

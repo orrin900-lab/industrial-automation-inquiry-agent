@@ -4,14 +4,16 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   getKnowledgeChunks,
   getKnowledgeStatus,
-  rebuildKnowledgeIndex
+  rebuildKnowledgeIndex,
+  uploadKnowledgeMarkdown
 } from "@/lib/api";
 import { AuthGuard } from "@/components/AuthGuard";
 import type {
   KnowledgeChunkItem,
   KnowledgeChunksResponse,
   KnowledgeReindexResponse,
-  KnowledgeStatus
+  KnowledgeStatus,
+  KnowledgeUploadResponse
 } from "@/lib/types";
 import { formatDate } from "@/lib/format";
 import { useI18n } from "@/lib/i18n";
@@ -34,8 +36,10 @@ function KnowledgePageContent() {
   const [offset, setOffset] = useState(0);
   const [loading, setLoading] = useState(true);
   const [rebuilding, setRebuilding] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
   const [reindexResult, setReindexResult] = useState<KnowledgeReindexResponse | null>(null);
+  const [uploadResult, setUploadResult] = useState<KnowledgeUploadResponse | null>(null);
 
   const loadStatus = useCallback(async () => {
     const response = await getKnowledgeStatus();
@@ -81,6 +85,37 @@ function KnowledgePageContent() {
       setError(err instanceof Error ? err.message : "Failed to rebuild Qdrant index.");
     } finally {
       setRebuilding(false);
+    }
+  }
+
+  async function handleUpload(file: File | null) {
+    setError("");
+    setUploadResult(null);
+    if (!file) {
+      return;
+    }
+    if (!file.name.toLowerCase().endsWith(".md")) {
+      setError("Only Markdown .md files are allowed.");
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      setError("Markdown file is too large. Limit is 2MB.");
+      return;
+    }
+
+    setUploading(true);
+    try {
+      const content = await file.text();
+      const result = await uploadKnowledgeMarkdown({
+        file_name: file.name,
+        content
+      });
+      setUploadResult(result);
+      await loadStatus();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to upload Markdown file.");
+    } finally {
+      setUploading(false);
     }
   }
 
@@ -177,6 +212,31 @@ function KnowledgePageContent() {
             </span>
           ) : null}
         </div>
+      </section>
+
+      <section className="rounded-lg border border-line bg-white p-5 shadow-subtle">
+        <h2 className="text-base font-semibold text-ink">Knowledge Upload</h2>
+        <p className="mt-2 text-sm leading-6 text-slate-600">
+          Upload a Markdown .md file into the prototype knowledge upload directory. Rebuild the Qdrant index after upload to make the chunks retrievable.
+        </p>
+        <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <input
+            type="file"
+            accept=".md,text/markdown,text/plain"
+            disabled={uploading}
+            onChange={(event) => handleUpload(event.target.files?.[0] || null)}
+            className="focus-ring rounded-md border border-line bg-white px-3 py-2 text-sm"
+          />
+          <span className="text-xs text-slate-500">
+            .md only, max 2MB. Upload does not execute content and does not send email.
+          </span>
+        </div>
+        {uploadResult ? (
+          <div className={uploadResult.success ? "mt-3 rounded-md bg-emerald-50 px-3 py-2 text-sm text-emerald-700" : "mt-3 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700"}>
+            {uploadResult.message} ({uploadResult.file_name}, {uploadResult.size_bytes} bytes)
+            {uploadResult.error_message ? ` ${uploadResult.error_message}` : ""}
+          </div>
+        ) : null}
       </section>
 
       <section className="rounded-lg border border-line bg-white p-5 shadow-subtle">

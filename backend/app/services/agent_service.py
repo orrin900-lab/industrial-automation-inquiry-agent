@@ -110,6 +110,7 @@ def create_review(
     inquiry_id: int,
     reviewer_name: str,
     review_status: str,
+    reviewer_role: str | None = None,
     edited_reply: str | None = None,
     reviewer_note: str | None = None,
 ) -> dict | None:
@@ -121,6 +122,7 @@ def create_review(
     log = ReviewRepository(db).create(
         inquiry_id=inquiry_id,
         reviewer_name=reviewer_name,
+        reviewer_role=reviewer_role,
         review_status=review_status,
         edited_reply=edited_reply,
         reviewer_note=reviewer_note,
@@ -129,6 +131,15 @@ def create_review(
     db.commit()
     db.refresh(log)
     return review_log_to_dict(log)
+
+
+def update_inquiry_status(db: Session, *, inquiry_id: int, status: str) -> dict | None:
+    inquiry = InquiryDbRepository(db).update_status_by_id(inquiry_id, status)
+    if inquiry is None:
+        return None
+    db.commit()
+    db.refresh(inquiry)
+    return inquiry_to_dict(inquiry)
 
 
 def _execution_mode(agent_result: AgentResult) -> str:

@@ -1,4 +1,4 @@
-# A11 评估与监控增强 Evaluation & Monitoring Enhancement
+﻿# A11 评估与监控增强 Evaluation & Monitoring Enhancement
 
 ## 1. 阶段目标
 
@@ -60,4 +60,8 @@ A11 目标是规划 Agent、RAG 和人工审核质量的评估与监控能力，
 - 前端能展示 Evaluation Dashboard。
 - 统计不影响 Agent 主流程。
 - 文档明确这是 prototype evaluation，不代表生产准确率。
+## A-Final 客服/业务员后台最终集成版
 
+A-Final 已补齐客服/业务员后台闭环：Public Website Inquiry、Email Inquiry Import、Inquiry Console、Requirement Confirmation Card、Candidate Products、Reply Draft edit/copy/export、Human Review、Follow-up Status、Product Library Admin、Knowledge Upload、Qdrant Rebuild Index、Redis basic status integration。
+
+当前边界保持不变：No automatic quotation, no stock commitment, no delivery commitment, no automatic email sending, manual review required。当前产品数据和知识库数据仍为高仿真模拟数据；项目定位仍是 portfolio / prototype 工程化项目，不代表完整生产系统。

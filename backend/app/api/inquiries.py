@@ -3,17 +3,18 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
-from app.core.dependencies import get_optional_current_user
+from app.core.dependencies import get_optional_current_user, require_roles
 from app.data_access.inquiry_repository import InquiryRepository
 from app.db.session import get_db
 from app.schemas.auth import AuthUser
-from app.schemas.inquiry import InquiryInput
+from app.schemas.inquiry import InquiryInput, InquiryStatusUpdate
 from app.schemas.review import ReviewInput
 from app.services.agent_service import (
     analyze_inquiry,
     create_review,
     get_inquiry_detail,
     list_inquiries,
+    update_inquiry_status,
 )
 
 
@@ -99,10 +100,12 @@ def create_review_endpoint(
     current_user: AuthUser | None = Depends(get_optional_current_user),
 ) -> dict:
     reviewer_name = current_user.email if current_user else review_input.reviewer_name
+    reviewer_role = current_user.role if current_user else None
     log = create_review(
         db,
         inquiry_id=inquiry_id,
         reviewer_name=reviewer_name,
+        reviewer_role=reviewer_role,
         review_status=review_input.review_status,
         edited_reply=review_input.edited_reply,
         reviewer_note=review_input.reviewer_note,
@@ -113,4 +116,20 @@ def create_review_endpoint(
         "status": "success",
         "inquiry_id": inquiry_id,
         "review_status": review_input.review_status,
+    }
+
+
+@router.patch("/{inquiry_id}/status")
+def update_inquiry_status_endpoint(
+    inquiry_id: int,
+    payload: InquiryStatusUpdate,
+    db: Session = Depends(get_db),
+    _current_user: AuthUser = Depends(require_roles("admin", "sales", "support")),
+) -> dict:
+    inquiry = update_inquiry_status(db, inquiry_id=inquiry_id, status=payload.status)
+    if inquiry is None:
+        raise HTTPException(status_code=404, detail="Inquiry not found.")
+    return {
+        "status": "success",
+        "inquiry": inquiry,
     }

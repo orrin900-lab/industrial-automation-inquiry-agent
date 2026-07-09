@@ -48,3 +48,35 @@ class InquiryInput(BaseModel):
             self.from_email = self.email
 
         return self
+
+
+class PublicInquiryInput(BaseModel):
+    name: str = Field(min_length=1)
+    email: str = Field(min_length=3)
+    company: str | None = None
+    country: str | None = None
+    product_category: str | None = None
+    message: str = Field(min_length=1)
+
+    def to_inquiry_input(self) -> InquiryInput:
+        subject = (
+            f"{self.product_category} website inquiry"
+            if self.product_category
+            else "Website inquiry"
+        )
+        return InquiryInput(
+            source="website",
+            channel="website",
+            customer_name=self.name,
+            customer_email=self.email,
+            company=self.company,
+            country=self.country,
+            subject=subject,
+            stated_product_category=self.product_category,
+            message=self.message,
+            attachments=[],
+        )
+
+
+class InquiryStatusUpdate(BaseModel):
+    status: str = Field(min_length=1)

@@ -32,6 +32,12 @@ class InquiryDbRepository:
         self.db.flush()
         return inquiry
 
+    def update_status_by_id(self, inquiry_id: int, status: str) -> Inquiry | None:
+        inquiry = self.get(inquiry_id)
+        if inquiry is None:
+            return None
+        return self.update_status(inquiry, status)
+
     def get(self, inquiry_id: int) -> Inquiry | None:
         return self.db.get(Inquiry, inquiry_id)
 

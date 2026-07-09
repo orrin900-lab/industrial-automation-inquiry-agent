@@ -14,12 +14,14 @@ class ReviewRepository:
         inquiry_id: int,
         reviewer_name: str,
         review_status: str,
+        reviewer_role: str | None = None,
         edited_reply: str | None = None,
         reviewer_note: str | None = None,
     ) -> ReviewLog:
         log = ReviewLog(
             inquiry_id=inquiry_id,
             reviewer_name=reviewer_name,
+            reviewer_role=reviewer_role,
             review_status=review_status,
             edited_reply=edited_reply,
             reviewer_note=reviewer_note,
@@ -42,6 +44,7 @@ def review_log_to_dict(log: ReviewLog) -> dict:
         "id": log.id,
         "inquiry_id": log.inquiry_id,
         "reviewer_name": log.reviewer_name,
+        "reviewer_role": log.reviewer_role,
         "review_status": log.review_status,
         "edited_reply": log.edited_reply,
         "reviewer_note": log.reviewer_note,

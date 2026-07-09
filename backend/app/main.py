@@ -5,6 +5,9 @@ from app.api.auth import router as auth_router
 from app.api.health import router as health_router
 from app.api.inquiries import router as inquiries_router
 from app.api.knowledge import router as knowledge_router
+from app.api.products import router as products_router
+from app.api.public import router as public_router
+from app.api.system import router as system_router
 from app.db.init_db import init_db
 
 
@@ -33,6 +36,9 @@ app.include_router(health_router, prefix="/api")
 app.include_router(auth_router, prefix="/api")
 app.include_router(inquiries_router, prefix="/api")
 app.include_router(knowledge_router, prefix="/api")
+app.include_router(products_router, prefix="/api")
+app.include_router(public_router, prefix="/api")
+app.include_router(system_router, prefix="/api")
 
 
 @app.on_event("startup")

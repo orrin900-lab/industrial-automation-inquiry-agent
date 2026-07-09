@@ -24,8 +24,18 @@ export interface InquiryInput {
   company?: string;
   country?: string;
   subject?: string;
+  stated_product_category?: string;
   message: string;
   attachments?: string[];
+}
+
+export interface PublicInquiryInput {
+  name: string;
+  email: string;
+  company?: string;
+  country?: string;
+  product_category?: string;
+  message: string;
 }
 
 export interface ExtractedRequirement {
@@ -47,7 +57,7 @@ export interface Product {
   brand?: string | null;
   series?: string | null;
   model?: string | null;
-  [key: string]: string | null | undefined;
+  [key: string]: string | boolean | null | undefined;
 }
 
 export interface ProductCandidate {
@@ -130,6 +140,7 @@ export interface ReviewLog {
   id: number;
   inquiry_id: number;
   reviewer_name: string;
+  reviewer_role?: string | null;
   review_status: string;
   edited_reply?: string | null;
   reviewer_note?: string | null;
@@ -166,8 +177,59 @@ export interface InquiryListParams {
   status?: string;
   channel?: string;
   product_category?: string;
+  query?: string;
   limit?: number;
   offset?: number;
+}
+
+export interface PublicInquiryResponse {
+  status: string;
+  message: string;
+  inquiry: InquiryRecord;
+}
+
+export interface ProductLibraryItem {
+  product_id: string;
+  product_name: string;
+  category: string;
+  brand?: string | null;
+  model?: string | null;
+  is_active: boolean;
+  product: Product;
+}
+
+export interface ProductLibraryResponse {
+  status: string;
+  items: ProductLibraryItem[];
+  total: number;
+  provider_note: string;
+}
+
+export interface ProductLibraryInput extends Product {
+  is_active?: boolean;
+}
+
+export interface KnowledgeUploadInput {
+  file_name: string;
+  content: string;
+}
+
+export interface KnowledgeUploadResponse {
+  success: boolean;
+  file_name: string;
+  saved_path?: string | null;
+  size_bytes: number;
+  message: string;
+  error_message?: string | null;
+}
+
+export interface SystemStatus {
+  status: string;
+  service: string;
+  redis_enabled: boolean;
+  redis_available: boolean;
+  redis_url: string;
+  error_message?: string | null;
 }
 
 export interface KnowledgeStatus {

@@ -6,9 +6,18 @@ import { getHealth, getInquiries } from "@/lib/api";
 import type { HealthResponse, InquiryListResponse } from "@/lib/api";
 import { InquiryListTable } from "@/components/InquiryListTable";
 import { StatCard } from "@/components/StatCard";
+import { AuthGuard } from "@/components/AuthGuard";
 import { useI18n } from "@/lib/i18n";
 
 export default function DashboardPage() {
+  return (
+    <AuthGuard allowedRoles={["admin", "sales", "support"]}>
+      <DashboardPageContent />
+    </AuthGuard>
+  );
+}
+
+function DashboardPageContent() {
   const [health, setHealth] = useState<HealthResponse | null>(null);
   const [healthError, setHealthError] = useState("");
   const [inquiries, setInquiries] = useState<InquiryListResponse | null>(null);

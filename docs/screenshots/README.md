@@ -1,4 +1,4 @@
-# 截图清单 Screenshots
+﻿# 截图清单 Screenshots
 
 本目录保存项目真实运行截图。不要添加伪造截图。
 
@@ -68,3 +68,18 @@ A9 主要是后端架构增强，用于将当前 `CSVProductProvider` / `ManualI
 - `docs/architecture.md` 中的 Business Data Adapter Layer 架构说明。
 - `docs/manual_test_report.md` 中的 A9 / A9.5 测试结果。
 - backend tests：`test_product_providers.py`、`test_inquiry_source_providers.py`、`test_a9_analyze_regression.py`。
+## A-Final 客服/业务员后台最终集成版
+
+A-Final 已补齐客服/业务员后台闭环：Public Website Inquiry、Email Inquiry Import、Inquiry Console、Requirement Confirmation Card、Candidate Products、Reply Draft edit/copy/export、Human Review、Follow-up Status、Product Library Admin、Knowledge Upload、Qdrant Rebuild Index、Redis basic status integration。
+
+当前边界保持不变：No automatic quotation, no stock commitment, no delivery commitment, no automatic email sending, manual review required。当前产品数据和知识库数据仍为高仿真模拟数据；项目定位仍是 portfolio / prototype 工程化项目，不代表完整生产系统。
+
+| File | Status | 展示内容 |
+| --- | --- | --- |
+| `16_public_inquiry_form.png` | pending | `/public-inquiry` 官网询盘模拟入口。 |
+| `17_email_inquiry_import.png` | pending | `/analyze` Email Inquiry 模式。 |
+| `18_reply_draft_edit_export.png` | pending | 详情页英文回复草稿编辑、Copy Reply、Export Markdown。 |
+| `19_product_library_admin.png` | pending | `/products` Product Library Admin。 |
+| `20_knowledge_upload.png` | pending | `/knowledge` Markdown 上传与 Rebuild Qdrant Index。 |
+
+本轮未自动生成新截图；如需 GitHub README 配图，请在 Docker Compose 服务运行后手动截取以上页面，不要引用不存在的图片。

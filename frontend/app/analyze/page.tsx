@@ -5,10 +5,19 @@ import { useState } from "react";
 import { analyzeInquiry } from "@/lib/api";
 import type { AnalyzeResponse, InquiryInput } from "@/lib/types";
 import { AgentResultView } from "@/components/AgentResultView";
+import { AuthGuard } from "@/components/AuthGuard";
 import { InquiryForm } from "@/components/InquiryForm";
 import { useI18n } from "@/lib/i18n";
 
 export default function AnalyzePage() {
+  return (
+    <AuthGuard allowedRoles={["admin", "sales", "support"]}>
+      <AnalyzePageContent />
+    </AuthGuard>
+  );
+}
+
+function AnalyzePageContent() {
   const [result, setResult] = useState<AnalyzeResponse | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");

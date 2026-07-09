@@ -46,3 +46,17 @@ class KnowledgeReindexResponse(BaseModel):
     message: str
     error_message: str | None = None
 
+
+class KnowledgeUploadInput(BaseModel):
+    file_name: str = Field(min_length=1)
+    content: str = Field(min_length=1)
+
+
+class KnowledgeUploadResponse(BaseModel):
+    success: bool
+    file_name: str
+    saved_path: str | None = None
+    size_bytes: int = 0
+    message: str
+    error_message: str | None = None
+

@@ -44,3 +44,37 @@ class ProductCandidate(BaseModel):
     match_reason: str
     missing_confirmations: list[str] = Field(default_factory=list)
     product: Product | None = None
+
+
+class ProductLibraryCreate(Product):
+    is_active: bool = True
+
+
+class ProductLibraryUpdate(BaseModel):
+    product_name: str | None = None
+    category: str | None = None
+    brand: str | None = None
+    model: str | None = None
+    is_active: bool | None = None
+    product_data: dict | None = None
+
+
+class ProductStatusUpdate(BaseModel):
+    is_active: bool
+
+
+class ProductLibraryItem(BaseModel):
+    product_id: str
+    product_name: str
+    category: str
+    brand: str | None = None
+    model: str | None = None
+    is_active: bool = True
+    product: Product
+
+
+class ProductLibraryListResponse(BaseModel):
+    status: str = "success"
+    items: list[ProductLibraryItem] = Field(default_factory=list)
+    total: int = 0
+    provider_note: str

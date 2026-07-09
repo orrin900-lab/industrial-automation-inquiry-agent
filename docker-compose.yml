@@ -25,6 +25,17 @@ services:
     volumes:
       - qdrant_data:/qdrant/storage
 
+  redis:
+    image: redis:7-alpine
+    container_name: industrial-agent-redis
+    ports:
+      - "127.0.0.1:6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
   backend:
     build: ./backend
     container_name: industrial-agent-backend
@@ -33,6 +44,8 @@ services:
         condition: service_healthy
       qdrant:
         condition: service_started
+      redis:
+        condition: service_healthy
     ports:
       - "127.0.0.1:8000:8000"
     environment:
@@ -45,6 +58,8 @@ services:
       RAG_RETRIEVAL_MODE: qdrant
       PRODUCT_PROVIDER: csv
       INQUIRY_SOURCE_PROVIDER: manual
+      ENABLE_REDIS: "true"
+      REDIS_URL: redis://redis:6379/0
       DB_INIT_MAX_ATTEMPTS: "30"
       DB_INIT_RETRY_DELAY_SECONDS: "2"
     healthcheck:

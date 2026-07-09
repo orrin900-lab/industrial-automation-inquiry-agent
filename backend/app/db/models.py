@@ -103,9 +103,27 @@ class ReviewLog(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
     inquiry_id: Mapped[int] = mapped_column(ForeignKey("inquiries.id"), index=True)
     reviewer_name: Mapped[str] = mapped_column(String(255))
+    reviewer_role: Mapped[str | None] = mapped_column(String(50), nullable=True)
     review_status: Mapped[str] = mapped_column(String(50), index=True)
     edited_reply: Mapped[str | None] = mapped_column(Text, nullable=True)
     reviewer_note: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
     inquiry: Mapped[Inquiry] = relationship(back_populates="review_logs")
+
+
+class ProductRecord(Base):
+    __tablename__ = "products"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    product_id: Mapped[str] = mapped_column(String(120), unique=True, index=True)
+    product_name: Mapped[str] = mapped_column(String(255), index=True)
+    category: Mapped[str] = mapped_column(String(100), index=True)
+    brand: Mapped[str | None] = mapped_column(String(120), nullable=True)
+    model: Mapped[str | None] = mapped_column(String(120), nullable=True)
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True, index=True)
+    product_json: Mapped[dict] = mapped_column(JSONType)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
+    )

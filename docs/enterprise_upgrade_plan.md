@@ -1,4 +1,4 @@
-# A+ 企业级增强版路线图 Enterprise Upgrade Plan
+﻿# A+ 企业级增强版路线图 Enterprise Upgrade Plan
 
 ## 1. 当前项目状态
 
@@ -157,3 +157,8 @@ A9 已从规划推进到轻量实现：
 - `WebsiteInquiryProvider` / `EmailInquiryProvider` 作为来源标准化预留。
 - 当前没有接入真实 ERP / CRM / 邮箱。
 - `/analyze`、`/knowledge`、`/login` 保持兼容。
+## A-Final 客服/业务员后台最终集成版
+
+A-Final 已补齐客服/业务员后台闭环：Public Website Inquiry、Email Inquiry Import、Inquiry Console、Requirement Confirmation Card、Candidate Products、Reply Draft edit/copy/export、Human Review、Follow-up Status、Product Library Admin、Knowledge Upload、Qdrant Rebuild Index、Redis basic status integration。
+
+当前边界保持不变：No automatic quotation, no stock commitment, no delivery commitment, no automatic email sending, manual review required。当前产品数据和知识库数据仍为高仿真模拟数据；项目定位仍是 portfolio / prototype 工程化项目，不代表完整生产系统。

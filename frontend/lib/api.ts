@@ -8,10 +8,17 @@ import type {
   KnowledgeChunksResponse,
   KnowledgeStatus,
   KnowledgeReindexResponse,
+  KnowledgeUploadInput,
+  KnowledgeUploadResponse,
   LoginPayload,
   LoginResponse,
+  ProductLibraryInput,
+  ProductLibraryResponse,
+  PublicInquiryInput,
+  PublicInquiryResponse,
   ReviewPayload,
-  SampleInquiry
+  SampleInquiry,
+  SystemStatus
 } from "@/lib/types";
 import { authHeader } from "@/lib/auth";
 
@@ -94,6 +101,10 @@ export function getHealth(): Promise<HealthResponse> {
   return requestJson<HealthResponse>("/api/health");
 }
 
+export function getSystemStatus(): Promise<SystemStatus> {
+  return requestJson<SystemStatus>("/api/system/status");
+}
+
 export function login(payload: LoginPayload): Promise<LoginResponse> {
   return requestJson<LoginResponse>("/api/auth/login", {
     method: "POST",
@@ -114,6 +125,15 @@ export function logout(): Promise<{ status: string; message: string }> {
 
 export function analyzeInquiry(payload: InquiryInput): Promise<AnalyzeResponse> {
   return requestJson<AnalyzeResponse>("/api/inquiries/analyze", {
+    method: "POST",
+    body: JSON.stringify(payload)
+  });
+}
+
+export function submitPublicInquiry(
+  payload: PublicInquiryInput
+): Promise<PublicInquiryResponse> {
+  return requestJson<PublicInquiryResponse>("/api/public/inquiries", {
     method: "POST",
     body: JSON.stringify(payload)
   });
@@ -147,6 +167,16 @@ export function submitReview(
   });
 }
 
+export function updateInquiryStatus(
+  id: number | string,
+  status: string
+): Promise<{ status: string; inquiry: unknown }> {
+  return requestJson<{ status: string; inquiry: unknown }>(`/api/inquiries/${id}/status`, {
+    method: "PATCH",
+    body: JSON.stringify({ status })
+  });
+}
+
 export function getKnowledgeStatus(): Promise<KnowledgeStatus> {
   return requestJson<KnowledgeStatus>("/api/knowledge/status");
 }
@@ -167,5 +197,49 @@ export function rebuildKnowledgeIndex(): Promise<KnowledgeReindexResponse> {
   return requestJson<KnowledgeReindexResponse>("/api/knowledge/reindex", {
     method: "POST",
     body: JSON.stringify({})
+  });
+}
+
+export function uploadKnowledgeMarkdown(
+  payload: KnowledgeUploadInput
+): Promise<KnowledgeUploadResponse> {
+  return requestJson<KnowledgeUploadResponse>("/api/knowledge/upload", {
+    method: "POST",
+    body: JSON.stringify(payload)
+  });
+}
+
+export function getProducts(params?: {
+  category?: string;
+  query?: string;
+  active_only?: boolean;
+  limit?: number;
+  offset?: number;
+}): Promise<ProductLibraryResponse> {
+  return requestJson<ProductLibraryResponse>("/api/products", undefined, {
+    category: params?.category,
+    query: params?.query,
+    active_only: params?.active_only ? "true" : undefined,
+    limit: params?.limit,
+    offset: params?.offset
+  });
+}
+
+export function createProduct(
+  payload: ProductLibraryInput
+): Promise<{ status: string; product: unknown }> {
+  return requestJson<{ status: string; product: unknown }>("/api/products", {
+    method: "POST",
+    body: JSON.stringify(payload)
+  });
+}
+
+export function updateProductStatus(
+  productId: string,
+  isActive: boolean
+): Promise<{ status: string; product: unknown }> {
+  return requestJson<{ status: string; product: unknown }>(`/api/products/${productId}/status`, {
+    method: "PATCH",
+    body: JSON.stringify({ is_active: isActive })
   });
 }

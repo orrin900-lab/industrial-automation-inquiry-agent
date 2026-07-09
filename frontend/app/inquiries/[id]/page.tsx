@@ -5,12 +5,23 @@ import { useParams } from "next/navigation";
 import { getInquiryDetail } from "@/lib/api";
 import type { InquiryDetail } from "@/lib/types";
 import { AgentResultView } from "@/components/AgentResultView";
+import { AuthGuard } from "@/components/AuthGuard";
+import { FollowUpStatusPanel } from "@/components/FollowUpStatusPanel";
+import { RequirementConfirmationCard } from "@/components/RequirementConfirmationCard";
 import { ReplyDraftEditor } from "@/components/ReplyDraftEditor";
 import { ReviewForm } from "@/components/ReviewForm";
 import { formatDate } from "@/lib/format";
 import { useI18n } from "@/lib/i18n";
 
 export default function InquiryDetailPage() {
+  return (
+    <AuthGuard allowedRoles={["admin", "sales", "support"]}>
+      <InquiryDetailPageContent />
+    </AuthGuard>
+  );
+}
+
+function InquiryDetailPageContent() {
   const params = useParams<{ id: string }>();
   const inquiryId = params.id;
   const [detail, setDetail] = useState<InquiryDetail | null>(null);
@@ -77,12 +88,22 @@ export default function InquiryDetailPage() {
 
       {detail.agent_result ? (
         <>
+          <RequirementConfirmationCard result={detail.agent_result} />
           <AgentResultView result={detail.agent_result} />
-          <ReplyDraftEditor value={replyDraft} onChange={setReplyDraft} />
+          <ReplyDraftEditor
+            value={replyDraft}
+            onChange={setReplyDraft}
+            fileName={`inquiry_${detail.inquiry.id}_reply_draft.md`}
+          />
           <ReviewForm
             inquiryId={detail.inquiry.id}
             editedReply={replyDraft}
             onSubmitted={loadDetail}
+          />
+          <FollowUpStatusPanel
+            inquiryId={detail.inquiry.id}
+            currentStatus={detail.inquiry.status}
+            onUpdated={loadDetail}
           />
         </>
       ) : (

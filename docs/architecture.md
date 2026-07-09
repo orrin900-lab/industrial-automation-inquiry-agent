@@ -1,4 +1,4 @@
-# 系统架构 Architecture
+﻿# 系统架构 Architecture
 
 ## 1. 当前系统架构
 
@@ -178,3 +178,8 @@ flowchart TD
 ```
 
 当前默认仍是 `CSVProductProvider` + `ManualInquiryProvider`。`DatabaseProductProvider` 和 `ERPProductProvider` 只是未来接入 PostgreSQL 产品表、SAP / 金蝶 / 用友 / 内部 ERP 的接口骨架，不代表已经接入真实企业数据。
+## A-Final 客服/业务员后台最终集成版
+
+A-Final 已补齐客服/业务员后台闭环：Public Website Inquiry、Email Inquiry Import、Inquiry Console、Requirement Confirmation Card、Candidate Products、Reply Draft edit/copy/export、Human Review、Follow-up Status、Product Library Admin、Knowledge Upload、Qdrant Rebuild Index、Redis basic status integration。
+
+当前边界保持不变：No automatic quotation, no stock commitment, no delivery commitment, no automatic email sending, manual review required。当前产品数据和知识库数据仍为高仿真模拟数据；项目定位仍是 portfolio / prototype 工程化项目，不代表完整生产系统。

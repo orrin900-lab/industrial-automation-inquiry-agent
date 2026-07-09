@@ -2,7 +2,7 @@
 
 面向工业自动化外贸场景的询盘需求确认与转化辅助 Agent。项目帮助客服 / 外贸业务员处理官网询盘和邮件询盘，完成产品类别判断、需求参数抽取、知识库检索、候选产品推荐、英文回复草稿生成、风险提示与人工审核记录。
 
-当前项目已完成 A1-A7 阶段：`Next.js + FastAPI + Agent Core + PostgreSQL + Qdrant + Docker Compose + Knowledge Base Admin`。项目适合作为 GitHub 作品集、简历项目、面试讲解和 3-5 分钟录屏展示。
+当前项目已完成 A-Final 客服/业务员后台最终集成版：`Next.js + FastAPI + Agent Core + PostgreSQL + Qdrant + Redis + Docker Compose + Knowledge Base Admin + Product Library Admin`。项目适合作为 GitHub 作品集、简历项目、面试讲解和 3-5 分钟录屏展示。
 
 ## 1. 项目概览 Project Overview
 
@@ -26,6 +26,7 @@ Industrial Automation Inquiry Agent 不是自动成交系统，而是面向 B2B 
   - [技术追问 Q&A](docs/career_package/technical_qa.md)
   - [项目难点与解决方案 Project Challenges](docs/career_package/project_challenges.md)
   - [投递包装说明 Job Application Notes](docs/career_package/job_application_notes.md)
+- [A-Final 验收计划 A-Final Acceptance Plan](docs/a_final_acceptance_plan.md)
 
 ## 2. 业务场景 Business Scenario
 
@@ -151,6 +152,7 @@ Backend API: http://127.0.0.1:8000
 Swagger: http://127.0.0.1:8000/docs
 PostgreSQL: localhost:5432
 Qdrant: http://127.0.0.1:6333
+Redis: 127.0.0.1:6379
 ```
 
 构建 Qdrant 知识库索引：
@@ -312,3 +314,26 @@ INQUIRY_SOURCE_PROVIDER=manual
 ```
 
 如果配置为尚未实现的 provider，系统会明确 fallback 到 CSV / Manual，保证 Demo 不崩溃。A9 仍然不接真实 ERP / CRM / 邮箱，不做库存同步、不做报价系统、不自动发送邮件。
+
+## 18. A-Final 客服/业务员后台最终集成版
+
+A-Final 将前期能力整合为一个客服/业务员后台闭环：
+
+- `/public-inquiry`：未登录官网询盘模拟入口，创建 `channel=website` 的 inquiry 记录。
+- `/analyze`：支持 Website Inquiry 和 Email Inquiry 手动导入分析。
+- `/inquiries`：支持 `channel`、`status`、`product_category` 筛选。
+- `/inquiries/{id}`：展示原始询盘、AgentResult、需求确认卡、候选产品、缺失信息、英文回复草稿、Retrieved Knowledge、Agent Trace、Human Review 和 Follow-up Status。
+- `Reply Draft`：支持编辑、Copy Reply、Export Markdown；不会自动发送邮件。
+- `/products`：admin-only Product Library Admin，支持 demo 产品列表、搜索、新增、启用/停用。
+- `/knowledge`：admin-only Knowledge Base Admin，支持 `.md` 上传和手动 Rebuild Qdrant Index。
+- `/api/system/status`：显示 Redis availability；Redis 不可用时系统不崩溃。
+
+Docker Compose 当前服务：
+
+- `postgres`
+- `backend`
+- `frontend`
+- `qdrant`
+- `redis`
+
+A-Final 仍然保持核心业务边界：No automatic quotation, no stock commitment, no delivery commitment, no automatic email sending, manual review required。当前产品和知识库数据仍为高仿真模拟数据，项目定位仍是 portfolio / prototype 工程化项目。

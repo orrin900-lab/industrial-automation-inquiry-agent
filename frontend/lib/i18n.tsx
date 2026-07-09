@@ -26,8 +26,10 @@ const dictionaries = {
     "auth.demoBoundary": "这些账号仅用于本地演示；当前项目不接入 SSO、OAuth、短信验证码或真实企业账号系统。",
     "app.subtitle": "外贸业务工作台",
     "nav.dashboard": "首页 Dashboard",
+    "nav.publicInquiry": "官网询盘 Public",
     "nav.analyze": "询盘分析 Analyze",
     "nav.inquiries": "询盘列表 Inquiries",
+    "nav.products": "产品库 Products",
     "nav.knowledge": "知识库 Knowledge",
     "language.zh": "中文",
     "language.en": "English",
@@ -183,7 +185,15 @@ const dictionaries = {
     "status.need_clarification": "需追问 need_clarification",
     "status.ready_for_quotation": "可进入报价准备 ready_for_quotation",
     "status.invalid_lead": "无效线索 invalid_lead",
-    "status.completed": "已完成 completed"
+    "status.completed": "已完成 completed",
+    "status.new": "新询盘 new",
+    "status.draft_ready": "草稿就绪 draft_ready",
+    "status.reviewed": "已审核 reviewed",
+    "status.followed_up": "已跟进 followed_up",
+    "status.closed": "已关闭 closed",
+    "status.lost": "已丢单 lost",
+    "status.approved": "已通过 approved",
+    "status.rejected": "已拒绝 rejected"
   },
   en: {
     "nav.login": "Login",
@@ -204,8 +214,10 @@ const dictionaries = {
     "auth.demoBoundary": "These accounts are for local demo only. The project does not include SSO, OAuth, SMS verification, or a production enterprise identity system.",
     "app.subtitle": "Sales operations console",
     "nav.dashboard": "Dashboard",
+    "nav.publicInquiry": "Public Inquiry",
     "nav.analyze": "Analyze Inquiry",
     "nav.inquiries": "Inquiry List",
+    "nav.products": "Products",
     "nav.knowledge": "Knowledge Base",
     "language.zh": "中文",
     "language.en": "English",
@@ -361,7 +373,15 @@ const dictionaries = {
     "status.need_clarification": "Need Clarification",
     "status.ready_for_quotation": "Ready For Quotation",
     "status.invalid_lead": "Invalid Lead",
-    "status.completed": "Completed"
+    "status.completed": "Completed",
+    "status.new": "New",
+    "status.draft_ready": "Draft Ready",
+    "status.reviewed": "Reviewed",
+    "status.followed_up": "Followed Up",
+    "status.closed": "Closed",
+    "status.lost": "Lost",
+    "status.approved": "Approved",
+    "status.rejected": "Rejected"
   }
 } as const;
 

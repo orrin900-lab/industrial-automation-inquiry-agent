@@ -7,7 +7,9 @@ from app.services.knowledge_service import (
     get_knowledge_status,
     list_knowledge_chunks,
     rebuild_knowledge_index,
+    upload_knowledge_markdown,
 )
+from app.schemas.knowledge import KnowledgeUploadInput
 
 
 router = APIRouter(
@@ -38,4 +40,9 @@ def list_knowledge_chunks_endpoint(
 @router.post("/reindex")
 def rebuild_knowledge_index_endpoint() -> dict:
     return rebuild_knowledge_index().model_dump(mode="json")
+
+
+@router.post("/upload")
+def upload_knowledge_markdown_endpoint(payload: KnowledgeUploadInput) -> dict:
+    return upload_knowledge_markdown(payload).model_dump(mode="json")
 

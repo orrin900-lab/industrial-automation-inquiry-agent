@@ -44,6 +44,12 @@ class DataProviderConfig(BaseModel):
     inquiry_source_provider: str = "manual"
 
 
+class RedisConfig(BaseModel):
+    enable_redis: bool = False
+    redis_url: str = "redis://127.0.0.1:6379/0"
+    timeout_seconds: float = 1.0
+
+
 class AppConfig(BaseModel):
     project_root: Path
     data_dir: Path
@@ -53,10 +59,12 @@ class AppConfig(BaseModel):
     selection_rules_md: Path
     email_templates_md: Path
     storage_dir: Path
+    knowledge_upload_dir: Path
     database_url: str
     llm: LLMConfig
     rag: RAGConfig
     data_providers: DataProviderConfig
+    redis: RedisConfig
 
 
 @lru_cache(maxsize=1)
@@ -74,6 +82,7 @@ def get_config() -> AppConfig:
         selection_rules_md=data_dir / "selection_rules.md",
         email_templates_md=data_dir / "email_templates.md",
         storage_dir=storage_dir,
+        knowledge_upload_dir=storage_dir / "knowledge_uploads",
         database_url=os.getenv("DATABASE_URL", "sqlite:///./storage/dev.db"),
         llm=LLMConfig(
             provider=os.getenv("LLM_PROVIDER", "openai"),
@@ -98,6 +107,11 @@ def get_config() -> AppConfig:
         data_providers=DataProviderConfig(
             product_provider=os.getenv("PRODUCT_PROVIDER", "csv"),
             inquiry_source_provider=os.getenv("INQUIRY_SOURCE_PROVIDER", "manual"),
+        ),
+        redis=RedisConfig(
+            enable_redis=_to_bool(os.getenv("ENABLE_REDIS", "false")),
+            redis_url=os.getenv("REDIS_URL", "redis://127.0.0.1:6379/0"),
+            timeout_seconds=float(os.getenv("REDIS_TIMEOUT_SECONDS", "1")),
         ),
     )
 

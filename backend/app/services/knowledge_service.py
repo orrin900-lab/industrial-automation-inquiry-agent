@@ -13,6 +13,8 @@ from app.schemas.knowledge import (
     KnowledgeChunksResponse,
     KnowledgeReindexResponse,
     KnowledgeStatusResponse,
+    KnowledgeUploadInput,
+    KnowledgeUploadResponse,
 )
 from app.utils.config import AppConfig, get_config
 
@@ -135,6 +137,59 @@ def rebuild_knowledge_index(
     )
 
 
+def upload_knowledge_markdown(
+    payload: KnowledgeUploadInput,
+    config: AppConfig | None = None,
+) -> KnowledgeUploadResponse:
+    resolved_config = config or get_config()
+    file_name = payload.file_name.strip().replace("\\", "/").split("/")[-1]
+    content_bytes = payload.content.encode("utf-8")
+    max_size = 2 * 1024 * 1024
+
+    if not file_name.lower().endswith(".md"):
+        return KnowledgeUploadResponse(
+            success=False,
+            file_name=file_name,
+            message="Only Markdown .md files are allowed.",
+            error_message="INVALID_FILE_TYPE",
+        )
+    if len(content_bytes) > max_size:
+        return KnowledgeUploadResponse(
+            success=False,
+            file_name=file_name,
+            size_bytes=len(content_bytes),
+            message="Markdown file is too large. Limit is 2MB.",
+            error_message="FILE_TOO_LARGE",
+        )
+    if not file_name or file_name in {".md", "..md"}:
+        return KnowledgeUploadResponse(
+            success=False,
+            file_name=file_name,
+            message="Invalid file name.",
+            error_message="INVALID_FILE_NAME",
+        )
+
+    upload_dir = resolved_config.knowledge_upload_dir
+    upload_dir.mkdir(parents=True, exist_ok=True)
+    target = (upload_dir / file_name).resolve()
+    if upload_dir.resolve() not in target.parents:
+        return KnowledgeUploadResponse(
+            success=False,
+            file_name=file_name,
+            message="Invalid upload path.",
+            error_message="INVALID_UPLOAD_PATH",
+        )
+
+    target.write_text(payload.content, encoding="utf-8")
+    return KnowledgeUploadResponse(
+        success=True,
+        file_name=file_name,
+        saved_path=str(target),
+        size_bytes=len(content_bytes),
+        message="Markdown knowledge file uploaded. Rebuild the Qdrant index to use it.",
+    )
+
+
 def _create_qdrant_store(config: AppConfig) -> QdrantStore:
     return QdrantStore(
         url=config.rag.qdrant_url,
@@ -146,15 +201,20 @@ def _create_qdrant_store(config: AppConfig) -> QdrantStore:
 
 
 def _local_knowledge_summary(config: AppConfig) -> tuple[list[str], int]:
-    documents = load_markdown_documents(
-        [
-            config.faq_md,
-            config.selection_rules_md,
-            config.email_templates_md,
-        ]
-    )
+    documents = load_markdown_documents(_knowledge_paths(config))
     chunks = split_markdown_documents(documents)
     return [document.source_file for document in documents], len(chunks)
+
+
+def _knowledge_paths(config: AppConfig):
+    paths = [
+        config.faq_md,
+        config.selection_rules_md,
+        config.email_templates_md,
+    ]
+    if config.knowledge_upload_dir.exists():
+        paths.extend(sorted(config.knowledge_upload_dir.glob("*.md")))
+    return paths
 
 
 def _point_to_chunk_item(point: dict[str, Any]) -> KnowledgeChunkItem:
