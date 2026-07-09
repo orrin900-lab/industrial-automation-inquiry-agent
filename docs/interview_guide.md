@@ -237,3 +237,20 @@ A9 只是 adapter layer 预留，没有接入真实 ERP、CRM 或邮箱，也不
 A-Final 已补齐客服/业务员后台闭环：Public Website Inquiry、Email Inquiry Import、Inquiry Console、Requirement Confirmation Card、Candidate Products、Reply Draft edit/copy/export、Human Review、Follow-up Status、Product Library Admin、Knowledge Upload、Qdrant Rebuild Index、Redis basic status integration。
 
 当前边界保持不变：No automatic quotation, no stock commitment, no delivery commitment, no automatic email sending, manual review required。当前产品数据和知识库数据仍为高仿真模拟数据；项目定位仍是 portfolio / prototype 工程化项目，不代表完整生产系统。
+
+## A-Final 最终版面试提示
+
+如果需要用 1-2 分钟讲最终版，可以强调：
+
+```text
+最终版已经不是单一 Agent demo，而是一个客服 / 外贸业务员后台闭环。
+它有官网询盘入口、邮件询盘手动导入、登录与角色权限、询盘列表、询盘详情、需求确认卡、候选产品、英文回复草稿编辑 / 复制 / 导出、人工审核、跟进状态、产品库管理、知识库上传、Qdrant RAG、Redis system status 和 Docker Compose 一键启动。
+```
+
+同时必须说清楚：
+
+- 当前使用高仿真模拟数据。
+- Product Library Admin 不是已接入真实 ERP。
+- Knowledge Upload 是 prototype 级 Markdown 上传和 rebuild index，不是完整知识库治理系统。
+- Redis 目前用于基础可用性和后续缓存 / 任务状态预留，不是复杂队列系统。
+- 系统不自动报价、不承诺库存、不承诺交期、不自动发送邮件。

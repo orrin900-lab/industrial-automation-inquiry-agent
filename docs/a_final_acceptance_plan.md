@@ -98,3 +98,15 @@ docker-compose up -d --build
 - Business Boundary：PASS，系统仍不自动报价、不承诺库存、不承诺交期、不自动发送邮件。
 
 截图状态：A-Final 页面截图 16-20 暂为 pending，需要用户手动截取真实页面；不得引用不存在的图片。
+
+## 9. Final Delivery 收口记录
+
+- Docker Compose：PASS，五服务 `postgres` / `backend` / `frontend` / `qdrant` / `redis` 可运行。
+- 页面访问：PASS，`/`、`/login`、`/public-inquiry`、`/analyze`、`/inquiries`、`/knowledge`、`/products` 返回 200。
+- 后端健康检查：PASS，`/api/health` 返回 200。
+- Swagger：PASS，`/docs` 返回 200。
+- Qdrant：PASS，`http://127.0.0.1:6333` 返回 200。
+- Backend pytest：PASS，39 passed。
+- Frontend build：PASS。
+- Known Issues：已记录 frontend npm audit 的已知提示，本轮不升级依赖，避免引入额外变更。
+- GitHub：A-Final.5 已 push；Final Delivery 会在文档更新后创建 `a-final-portfolio-ready` tag 并推送。

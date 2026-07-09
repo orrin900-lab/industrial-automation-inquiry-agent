@@ -27,6 +27,7 @@ Industrial Automation Inquiry Agent 不是自动成交系统，而是面向 B2B 
   - [项目难点与解决方案 Project Challenges](docs/career_package/project_challenges.md)
   - [投递包装说明 Job Application Notes](docs/career_package/job_application_notes.md)
 - [A-Final 验收计划 A-Final Acceptance Plan](docs/a_final_acceptance_plan.md)
+- [已知事项 Known Issues](docs/known_issues.md)
 
 ## 2. 业务场景 Business Scenario
 
@@ -50,11 +51,14 @@ Industrial Automation Inquiry Agent 不是自动成交系统，而是面向 B2B 
 - `Retrieved Knowledge` 检索来源展示，结构兼容前端。
 - `Agent Trace` 可观测性，展示节点 mode、success、latency。
 - 风险提示 `Risk Flags`。
-- 英文回复草稿 `English Reply Draft`，必须人工审核。
+- 英文回复草稿 `English Reply Draft`，支持编辑、Copy Reply、Export Markdown，必须人工审核。
 - PostgreSQL 持久化 inquiry、AgentResult、AgentRun、AgentStep、ReviewLog。
 - 中文 / English UI 切换，使用 `localStorage` 保持语言选择。
-- 轻量知识库运维后台 `Knowledge Base Admin`：查看 Qdrant 状态、chunks 列表并手动重建索引。
-- Docker Compose 一键启动 frontend、backend、postgres、qdrant。
+- demo 登录与角色权限 `Auth & Role-Based Access`：admin / sales / support。
+- 轻量产品库管理 `Product Library Admin`：admin-only demo 产品列表、搜索、新增、启用/停用。
+- 轻量知识库运维后台 `Knowledge Base Admin`：查看 Qdrant 状态、chunks 列表、上传 `.md` 并手动重建索引。
+- Redis 基础接入：`/api/system/status` 展示 `redis_available`，Redis 不可用时系统不崩溃。
+- Docker Compose 一键启动 frontend、backend、postgres、qdrant、redis。
 
 ## 4. 系统架构 Architecture
 
@@ -337,3 +341,18 @@ Docker Compose 当前服务：
 - `redis`
 
 A-Final 仍然保持核心业务边界：No automatic quotation, no stock commitment, no delivery commitment, no automatic email sending, manual review required。当前产品和知识库数据仍为高仿真模拟数据，项目定位仍是 portfolio / prototype 工程化项目。
+
+## 19. Final Delivery 最终交付状态
+
+当前版本已封装为 A 方案最终作品集版本，可用于 GitHub 展示、简历项目、面试讲解和本地录屏演示。
+
+- 稳定分支：`main`
+- 稳定 tag：`a-final-customer-sales-console-stable`
+- Docker Compose 服务：`frontend` / `backend` / `postgres` / `qdrant` / `redis`
+- 后端测试：`39 passed`
+- 前端构建：`npm run build` passed
+- 核心页面：`/login`、`/public-inquiry`、`/analyze`、`/inquiries`、`/knowledge`、`/products`
+- 最终封版说明：见 [A-Final Acceptance Plan](docs/a_final_acceptance_plan.md) 和 [Manual Test Report](docs/manual_test_report.md)
+- 已知事项：见 [Known Issues](docs/known_issues.md)
+
+A-Final pending screenshots `16_public_inquiry_form.png` 到 `20_knowledge_upload.png` 需要在本地页面运行时手动截取真实截图；README 仅引用已经存在的真实截图，不引用 pending 图片。

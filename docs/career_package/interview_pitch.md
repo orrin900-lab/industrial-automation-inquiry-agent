@@ -66,3 +66,17 @@ A7 还增加了 Knowledge Base Admin，能查看 Qdrant collection、points_coun
 9. 边界：模拟数据、prototype、不是生产系统。
 10. 后续升级：生产级 embedding、权限、知识库上传、邮件/CRM/ERP 集成。
 
+## 6. A-Final 最终版面试讲法
+
+如果面试官希望看到“完整后台闭环”，可以这样展开：
+
+```text
+这个项目最后我做成了客服 / 外贸业务员后台的完整 prototype。
+前台有 /public-inquiry 模拟官网询盘入口，后台有 /analyze 支持 Website Inquiry 和 Email Inquiry 手动导入。
+业务员可以在 /inquiries 查看列表和筛选，进入详情后看到 AgentResult、需求确认卡、候选产品、RAG 来源、Agent Trace、英文回复草稿、Human Review 和 Follow-up Status。
+管理员可以进入 /products 管理 demo 产品库，也可以进入 /knowledge 上传 Markdown 知识文件并手动 rebuild Qdrant index。
+系统通过 Docker Compose 启动 frontend、backend、PostgreSQL、Qdrant 和 Redis。
+但我也明确保留业务边界：它不自动报价、不承诺库存和交期、不自动发送邮件，所有英文回复草稿都必须人工审核。
+```
+
+这个版本适合展示工程完整度：不是只做一个聊天机器人，而是把 AI Agent 放进一个业务后台闭环里，并且保留权限、持久化、RAG、可观测性、人工审核和部署链路。

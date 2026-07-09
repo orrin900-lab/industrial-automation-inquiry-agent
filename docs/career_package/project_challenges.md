@@ -70,3 +70,16 @@
 面试表达：我会清楚说明这是工程化作品集项目，但它覆盖了生产系统需要考虑的关键接口和边界。  
 可继续优化方向：如果进入真实企业场景，需要做数据治理、权限、审计、监控和安全评估。
 
+## 11. A-Final 后台闭环整合
+
+问题描述：  
+项目后期不再只是 Agent 分析，而是要把官网询盘、邮件询盘、后台处理、产品库、知识库、人工审核和部署状态串成一个可演示闭环。
+
+解决方案：  
+新增 `/public-inquiry`、Email Inquiry Import、Requirement Confirmation Card、Reply Draft edit/copy/export、Follow-up Status、Product Library Admin、Knowledge Upload 和 Redis/System Status，并通过 Docker Compose 保持五服务一键启动。
+
+面试表达：  
+“我把 AI Agent 放进一个客服 / 业务员后台场景里，而不是停留在 API demo。这样面试时能展示真实业务流程、权限边界、数据持久化、RAG 运维和人工审核。”
+
+可继续优化方向：  
+后续可接真实 CRM/ERP、邮件系统、知识库版本管理、审计日志、异步索引任务和 Evaluation Dashboard。

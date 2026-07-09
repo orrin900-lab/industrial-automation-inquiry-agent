@@ -199,3 +199,25 @@ Agent workflow 和前端 API 不需要大改。
 A-Final 已补齐客服/业务员后台闭环：Public Website Inquiry、Email Inquiry Import、Inquiry Console、Requirement Confirmation Card、Candidate Products、Reply Draft edit/copy/export、Human Review、Follow-up Status、Product Library Admin、Knowledge Upload、Qdrant Rebuild Index、Redis basic status integration。
 
 当前边界保持不变：No automatic quotation, no stock commitment, no delivery commitment, no automatic email sending, manual review required。当前产品数据和知识库数据仍为高仿真模拟数据；项目定位仍是 portfolio / prototype 工程化项目，不代表完整生产系统。
+
+## 16. Final Delivery 求职展示口径
+
+当前最终版可以定位为：
+
+```text
+面向工业自动化外贸询盘的客服/业务员后台 AI Agent 作品集项目
+```
+
+最终版重点能力：
+
+- Public Inquiry：未登录官网询盘模拟入口。
+- Email Inquiry Import：邮件询盘手动导入和 Agent 分析。
+- Inquiry Console：列表筛选、详情、AgentResult、需求确认卡、候选产品、Retrieved Knowledge、Agent Trace。
+- Reply Draft：英文回复草稿编辑、Copy Reply、Export Markdown。
+- Human Review / Follow-up Status：人工审核和跟进状态记录。
+- Product Library Admin：admin-only demo 产品库管理。
+- Knowledge Base Admin：Markdown 上传、Qdrant Rebuild Index、chunks 和 status 查看。
+- Redis / System Status：展示 Redis availability，预留缓存和任务状态方向。
+- Docker Compose：frontend、backend、postgres、qdrant、redis 五服务一键启动。
+
+投递和面试时继续强调：当前是 portfolio / prototype 工程化项目，使用高仿真模拟数据，不自动报价、不承诺库存、不承诺交期、不自动发送邮件。

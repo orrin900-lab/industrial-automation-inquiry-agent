@@ -82,4 +82,4 @@ A-Final 已补齐客服/业务员后台闭环：Public Website Inquiry、Email I
 | `19_product_library_admin.png` | pending | `/products` Product Library Admin。 |
 | `20_knowledge_upload.png` | pending | `/knowledge` Markdown 上传与 Rebuild Qdrant Index。 |
 
-本轮未自动生成新截图；如需 GitHub README 配图，请在 Docker Compose 服务运行后手动截取以上页面，不要引用不存在的图片。
+Final Delivery 阶段未自动生成 16-20 号截图：当前环境无法稳定调用本地浏览器截图工具，且 Playwright CLI 需要外部 npm registry 获取依赖。为避免伪造截图，这些图片保持 `pending`。如需 GitHub README 配图，请在 Docker Compose 服务运行后手动截取以上真实页面，不要引用不存在的图片。

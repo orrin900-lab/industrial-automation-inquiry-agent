@@ -220,3 +220,20 @@ A-Final 已补齐客服/业务员后台闭环：Public Website Inquiry、Email I
 | A-Final.5 | Business Boundary | PASS | 文档继续说明不自动报价、不承诺库存、不承诺交期、不自动发送邮件，英文回复草稿必须人工审核。 |
 
 截图说明：自动截图工具需要从外部 npm registry 获取 Playwright CLI，本环境被安全策略拒绝，因此 A-Final 截图 `16_public_inquiry_form.png` 到 `20_knowledge_upload.png` 暂标记为 pending，需要用户手动截图补齐；未伪造截图。
+
+## Final Delivery Test Results
+
+| Priority | Test Case | Result | Notes |
+|---|---|---|---|
+| Final Delivery | Git status | PASS | `main` 分支，开始时工作区干净。 |
+| Final Delivery | Docker Compose config | PASS | 配置包含 frontend/backend/postgres/qdrant/redis。 |
+| Final Delivery | Docker Compose up | PASS | 五服务可启动，backend/frontend/postgres/redis healthy，qdrant running。 |
+| Final Delivery | Core pages | PASS | `/`、`/login`、`/public-inquiry`、`/analyze`、`/inquiries`、`/knowledge`、`/products` 返回 200。 |
+| Final Delivery | Backend health | PASS | `/api/health` 返回 200。 |
+| Final Delivery | Swagger | PASS | `/docs` 返回 200。 |
+| Final Delivery | Qdrant endpoint | PASS | `http://127.0.0.1:6333` 返回 200。 |
+| Final Delivery | Backend pytest | PASS | 39 passed。 |
+| Final Delivery | Frontend build | PASS | Next.js build passed。 |
+| Final Delivery | Screenshots 16-20 | PENDING | 当前环境无法稳定自动截图，需要用户手动截取真实页面；未伪造截图。 |
+| Final Delivery | npm audit known issue | RECORDED | 记录在 `docs/known_issues.md`，本轮不升级依赖。 |
+| Final Delivery | Business Boundary | PASS | 继续不自动报价、不承诺库存、不承诺交期、不自动发送邮件，英文回复草稿必须人工审核。 |

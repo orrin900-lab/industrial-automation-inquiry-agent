@@ -145,3 +145,26 @@ Industrial Automation Inquiry Agent｜工业自动化外贸询盘分析与转化
 6. 邮件导入：只做 draft/import，不自动发送。
 7. CRM/ERP mock integration：继续保持报价和库存人工确认边界。
 
+## 11. A-Final 投递包装建议
+
+当前 A-Final 可以在简历中包装为：
+
+```text
+工业自动化外贸询盘客服/业务员后台 AI Agent
+```
+
+推荐强调：
+
+- 不是单点 chatbot，而是完整客服 / 业务员工作台。
+- 覆盖 Public Inquiry、Email Inquiry Import、Inquiry Console、Human Review、Product Library Admin、Knowledge Upload。
+- 具备 FastAPI、Next.js、PostgreSQL、Qdrant、Redis、Docker Compose 的工程化链路。
+- 保留 Human-in-the-loop 和业务风险边界。
+
+不要写：
+
+- 已接入真实企业 ERP / CRM。
+- 已自动报价。
+- 已自动发送客户邮件。
+- 已在生产环境上线。
+
+更稳妥的表达是：这是一个 portfolio / prototype 工程化项目，使用高仿真模拟数据验证企业 AI Agent 后台的设计与实现能力。

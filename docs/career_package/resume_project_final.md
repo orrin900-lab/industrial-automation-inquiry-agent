@@ -67,3 +67,33 @@ The system is packaged with Docker Compose and explicitly follows business bound
 - Added a lightweight Knowledge Base Admin to inspect Qdrant status, chunks, source_file filters, and manually rebuild the RAG index.
 - Maintained business safety boundaries: no automatic pricing, no stock/lead-time promises, and no automatic email sending.
 
+## 8. A-Final 最终版补充
+
+A-Final 将项目从“询盘分析后台”补齐为客服 / 外贸业务员可演示的完整后台闭环：
+
+- Public Inquiry：`/public-inquiry` 支持未登录官网询盘模拟入口。
+- Email Inquiry Import：`/analyze` 支持邮件标题、发件人、公司、国家和邮件正文手动导入。
+- Auth & Role-Based Access：`admin`、`sales`、`support` demo 角色，admin 可访问 Product Library Admin 和 Knowledge Base Admin。
+- Product Library Admin：`/products` 支持 demo 产品库列表、搜索、新增和启用 / 停用。
+- Knowledge Upload：`/knowledge` 支持 `.md` 知识文件上传和手动 Rebuild Qdrant Index。
+- Reply Draft Workspace：英文回复草稿支持编辑、Copy Reply、Export Markdown。
+- Follow-up Status：详情页可标记跟进状态。
+- Redis / System Status：Docker Compose 增加 Redis，`/api/system/status` 展示系统状态。
+
+简历表达时建议写成“portfolio / prototype 工程化项目”，不要写成真实生产上线、真实企业数据接入、自动报价或自动发邮件系统。
+
+### A-Final 中文简历 bullet points
+
+- 构建工业自动化外贸询盘客服 / 业务员后台，覆盖 Public Inquiry、Email Inquiry Import、Inquiry Console、Human Review、Follow-up Status、Product Library Admin 和 Knowledge Base Admin。
+- 使用 FastAPI + PostgreSQL 保存询盘、AgentResult、Agent Trace、ReviewLog 和跟进状态，并通过 Next.js 展示结构化分析结果。
+- 使用 Qdrant RAG + Keyword Fallback 检索 FAQ、选型规则和邮件模板，保留 Retrieved Knowledge 可解释来源。
+- 通过 Auth & Role-Based Access 区分 admin / sales / support，限制知识库与产品库管理入口。
+- 使用 Docker Compose 编排 frontend、backend、postgres、qdrant、redis，完成本地一键启动与验收。
+
+### A-Final English resume bullets
+
+- Built a customer/sales inquiry console for industrial automation export sales, covering public website inquiries, manual email inquiry import, inquiry analysis, human review, follow-up status, product library admin, and knowledge base admin.
+- Implemented FastAPI APIs with PostgreSQL persistence for inquiries, structured AgentResult, Agent Trace, review logs, and follow-up status.
+- Integrated Qdrant-based RAG with keyword fallback to retrieve FAQ, selection rules, and email templates while keeping Retrieved Knowledge explainable.
+- Added demo role-based access control for admin, sales, and support users, restricting product and knowledge admin pages to admin users.
+- Packaged the system with Docker Compose across Next.js frontend, FastAPI backend, PostgreSQL, Qdrant, and Redis.

@@ -183,3 +183,28 @@ flowchart TD
 A-Final 已补齐客服/业务员后台闭环：Public Website Inquiry、Email Inquiry Import、Inquiry Console、Requirement Confirmation Card、Candidate Products、Reply Draft edit/copy/export、Human Review、Follow-up Status、Product Library Admin、Knowledge Upload、Qdrant Rebuild Index、Redis basic status integration。
 
 当前边界保持不变：No automatic quotation, no stock commitment, no delivery commitment, no automatic email sending, manual review required。当前产品数据和知识库数据仍为高仿真模拟数据；项目定位仍是 portfolio / prototype 工程化项目，不代表完整生产系统。
+
+## A-Final 架构补充
+
+A-Final 之后，系统形成五服务 Docker Compose 架构：
+
+```mermaid
+flowchart TD
+    U["Public Visitor"] --> PI["/public-inquiry"]
+    S["Sales / Support / Admin"] --> F["Next.js Frontend"]
+    PI --> B["FastAPI Backend"]
+    F --> B
+    B --> A["Agent Core"]
+    A --> Q[("Qdrant RAG")]
+    A --> P["Product Provider / Product Library"]
+    B --> DB[("PostgreSQL")]
+    B --> R[("Redis")]
+```
+
+- `frontend`：客服 / 业务员后台、Public Inquiry、Product Library Admin、Knowledge Base Admin。
+- `backend`：FastAPI API、Agent Service、Auth、Review、Product Library、Knowledge Upload、System Status。
+- `postgres`：询盘、AgentResult、AgentStep、ReviewLog、产品库 demo 数据等持久化。
+- `qdrant`：Markdown knowledge chunks 向量检索。
+- `redis`：基础 availability / system status 接入，后续可扩展缓存、限流或后台任务状态。
+
+A-Final 不改变核心业务边界：No automatic quotation, no stock commitment, no delivery commitment, no automatic email sending, manual review required。
